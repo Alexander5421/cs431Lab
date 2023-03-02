@@ -107,19 +107,19 @@ int MCP23018::begin() {
 }
 
 int MCP23018::SetDirections(uint8_t _a, uint8_t _b) { 
-	return writeToRegister(IODIRA,a) & writeToRegister(IODIRB,b);
+	return writeToRegister(IODIRA,_a) & writeToRegister(IODIRB,_b);
 }
 
 int MCP23018::SetPullups(uint8_t _a, uint8_t _b) { 
-	return writeToRegister(GPPUA,a) & writeToRegister(GPPUB,b);
+	return writeToRegister(GPPUA,_a) & writeToRegister(GPPUB,_b);
 }
 
 int MCP23018::SetPortA(uint8_t _data) { 
-	return writeToRegister(GPIOA,data);	//............or is it OLATA 
+	return writeToRegister(GPIOA,_data);	//............or is it OLATA 
 }
 
 int MCP23018::SetPortB(uint8_t _data) { 
-	return writeToRegister(GPIOB,data);
+	return writeToRegister(GPIOB,_data);
 }
 
 int MCP23018::GetPortA() { 
