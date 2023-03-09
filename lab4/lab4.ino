@@ -23,7 +23,10 @@
 #include "driver/gpio.h"
 #include "MCP23018.h" 
 #include <string>
-#define STACK_SIZE 1024
+#define STACK_SIZE 2048
+#define LONG_TIME 0xffff
+using namespace biped;
+
 
 /*
  *  Use biped namespace.
@@ -38,6 +41,7 @@ MCP23018 * io_expander_1;
 // TODO declare synchronization primitives
 
 SemaphoreHandle_t button_press_release_Semaphore = NULL, actuating_motors_Semaphore = NULL, button_status_count_display_Semaphore = NULL;
+SemaphoreHandle_t mutex = NULL;
 
 bool button_a_pressed = false, button_b_pressed = false, button_c_pressed = false;
 int button_a_pressed_num_times = 0, button_b_pressed_num_times = 0, button_c_pressed_num_times = 0;
@@ -53,36 +57,43 @@ void io_expander_a_interrupt_handler() {
 void button_press_release_task(void * pvParameters/*...*/) {
     for (;;) {
         if (xSemaphoreTake(button_press_release_Semaphore, LONG_TIME) == pdTRUE) {
+            biped::Serial(LogLevel::info) << "here7";
             uint8_t intf_a_val = io_expander_1->readFromRegister(INTFA);
             uint8_t intf_b_val = io_expander_1->readFromRegister(INTFB);
             uint8_t intcap_a_val = io_expander_1->readFromRegister(INTCAPA);
             uint8_t intcap_b_val = io_expander_1->readFromRegister(INTCAPB);
-            if ((intf_a_val & (1 << IOExpanderAPortAPin::pushbutton_a)) == (1 << IOExpanderAPortAPin::pushbutton_a)) {
-                if ((intcap_a_val & (1 << IOExpanderAPortAPin::pushbutton_a)) == (1 << IOExpanderAPortAPin::pushbutton_a)) {
-                    button_a_pressed = false;   //active low
-                } else {
-                    button_a_pressed = true;
-                    button_a_pressed_num_times++;
-                }   
+            if(xSemaphoreTake(mutex, LONG_TIME) == pdTRUE){
+                biped::Serial(LogLevel::info) << "here8";
+                 if ((intf_a_val & (1 << IOExpanderAPortAPin::pushbutton_a)) == (1 << IOExpanderAPortAPin::pushbutton_a)) {
+                    if ((intcap_a_val & (1 << IOExpanderAPortAPin::pushbutton_a)) == (1 << IOExpanderAPortAPin::pushbutton_a)) {
+                        button_a_pressed = false;   //active low
+                    } else {
+                        button_a_pressed = true;
+                        button_a_pressed_num_times++;
+                    }   
 
-            } else if ((intf_a_val & (1 << IOExpanderAPortAPin::pushbutton_b)) == (1 << IOExpanderAPortAPin::pushbutton_b)) { // this assumes that INTCAP registers are always read before the next button interrupt happens
-                if ((intcap_a_val & (1 << IOExpanderAPortAPin::pushbutton_b)) == (1 << IOExpanderAPortAPin::pushbutton_b)) {
-                    button_b_pressed = false;   //active low
-                } else {
-                    button_b_pressed = true;
-                    button_b_pressed_num_times++;
-                }
-            } else if ((intf_b_val & (1 << IOExpanderAPortBPin::pushbutton_c)) == (1 << IOExpanderAPortBPin::pushbutton_c)) {
-                if ((intcap_b_val & (1 << IOExpanderAPortBPin::pushbutton_c)) == (1 << IOExpanderAPortBPin::pushbutton_c)) {
-                    button_c_pressed = false;
-                } else {
-                    button_c_pressed = true;
-                    button_c_pressed_num_times++;
-                }
-            } 
+                } else if ((intf_a_val & (1 << IOExpanderAPortAPin::pushbutton_b)) == (1 << IOExpanderAPortAPin::pushbutton_b)) { // this assumes that INTCAP registers are always read before the next button interrupt happens
+                    if ((intcap_a_val & (1 << IOExpanderAPortAPin::pushbutton_b)) == (1 << IOExpanderAPortAPin::pushbutton_b)) {
+                        button_b_pressed = false;   //active low
+                    } else {
+                        button_b_pressed = true;
+                        button_b_pressed_num_times++;
+                    }
+                } else if ((intf_b_val & (1 << IOExpanderAPortBPin::pushbutton_c)) == (1 << IOExpanderAPortBPin::pushbutton_c)) {
+                    if ((intcap_b_val & (1 << IOExpanderAPortBPin::pushbutton_c)) == (1 << IOExpanderAPortBPin::pushbutton_c)) {
+                        button_c_pressed = false;
+                    } else {
+                        button_c_pressed = true;
+                        button_c_pressed_num_times++;
+                    }
+                } 
+                xSemaphoreGive(mutex);
+            }
+            biped::Serial(LogLevel::info) << "here9";
             //put here 
-            xSemaphoreGiveFromISR(actuating_motors_Semaphore, NULL);
-            xSemaphoreGiveFromISR(button_status_count_display_Semaphore, NULL);
+            xSemaphoreGive(actuating_motors_Semaphore);
+            xSemaphoreGive(button_status_count_display_Semaphore);
+            biped::Serial(LogLevel::info) << "here1";
         } 
     }
 }
@@ -118,7 +129,7 @@ void actuating_motors_task(void * pvParameters/*...*/) {
 
 void button_status_count_display_task(void * pvParameters/*...*/) {
     for (;;) {
-        if (xSemaphoreTake(button_status_count_display_Semaphore, LONG_TIME) == pdTRUE) {
+        if ((xSemaphoreTake(button_status_count_display_Semaphore, LONG_TIME) == pdTRUE) && (xSemaphoreTake(mutex, LONG_TIME) == pdTRUE)) {
             Display(0) << "Button A Pressed: " << (button_a_pressed?"true":"false") ;
             Display(1) << "Count: " << button_a_pressed_num_times;
             Display(2) << "Button B Pressed: " << (button_b_pressed?"true":"false");
@@ -126,6 +137,8 @@ void button_status_count_display_task(void * pvParameters/*...*/) {
             Display(4) << "Button C Pressed: " << (button_c_pressed?"true":"false");
             Display(5) << "Count: " << button_c_pressed_num_times;
             Display::display();
+            xSemaphoreGive(mutex);
+            
         }
     }
 }
@@ -143,6 +156,7 @@ setup()
     button_press_release_Semaphore = xSemaphoreCreateBinary(), //..................
     actuating_motors_Semaphore = xSemaphoreCreateBinary(), 
     button_status_count_display_Semaphore = xSemaphoreCreateBinary();
+    mutex = xSemaphoreCreateMutex();
 
 
     // TODO setup IO expander
@@ -190,9 +204,9 @@ setup()
 
     BaseType_t button_press_release_task_Returned, actuating_motors_task_Returned, button_status_count_display_task_Returned;
 
-    button_press_release_task_Returned = xTaskCreate(button_press_release_task, "Button Press Release", STACK_SIZE /*.....*/, ( void * ) 1 /*.....*/, (1|portPRIVILEGE_BIT) /*...*/);
-    actuating_motors_task_Returned = xTaskCreate(actuating_motors_task, "Actuating Motors", STACK_SIZE /*.....*/, ( void * ) 1 /*.....*/, (1|portPRIVILEGE_BIT) /*...*/);
-    button_status_count_display_task_Returned = xTaskCreate(button_status_count_display_task, "Button Status Count Display", STACK_SIZE /*.....*/, ( void * ) 1 /*.....*/, (1|portPRIVILEGE_BIT) /*...*/);
+    button_press_release_task_Returned = xTaskCreate(button_press_release_task, "Button Press Release", STACK_SIZE /*.....*/, ( void * ) 1 /*.....*/, (1|portPRIVILEGE_BIT) /*...*/, NULL);
+    actuating_motors_task_Returned = xTaskCreate(actuating_motors_task, "Actuating Motors", STACK_SIZE /*.....*/, ( void * ) 1 /*.....*/, (1|portPRIVILEGE_BIT) /*...*/, NULL);
+    button_status_count_display_task_Returned = xTaskCreate(button_status_count_display_task, "Button Status Count Display", STACK_SIZE /*.....*/, ( void * ) 1 /*.....*/, (1|portPRIVILEGE_BIT) /*...*/, NULL);
 }
 
 void
