@@ -79,7 +79,8 @@ setup()
      *  An object must be instantiated first before
      *  its pointer can be used.
      */
-    // TODO LAB 5 YOUR CODE HERE.
+    // controller_ = std::make_shared<Controller>();
+    sensor_ = std::make_shared<Sensor>();
 
     /*
      *  Set periods of Controller and Sensor.
@@ -88,7 +89,10 @@ setup()
      *  Remember to set both the fast and slow domain
      *  period for each class, if applicable.
      */
-    // TODO LAB 5 YOUR CODE HERE.
+    // controller_->setPeriodFast(ControllerParameter::period_fast);
+    // controller_->setPeriodSlow(ControllerParameter::period_slow);
+    sensor_->setPeriodFast(SensorParameter::period_fast);
+    sensor_->setPeriodSlow(SensorParameter::period_slow);
 
     /*
      *  Attach the corresponding interrupt handler to the left
@@ -102,7 +106,8 @@ setup()
     /*
      *  Enable timer thus starting the real-time tasks.
      */
-    // TODO LAB 5 YOUR CODE HERE.
+    // controller_->enableTimer();
+    sensor_->enableTimer();
 
 
     if (biped::Serial::getLogLevelWorst() <= LogLevel::error)

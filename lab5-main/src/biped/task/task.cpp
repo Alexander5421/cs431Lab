@@ -67,7 +67,7 @@ realTimeTask(void* pvParameters)
          *  Perform fast domain sensing.
          *  See the Sensor class for details.
          */
-        // TODO LAB 5 YOUR CODE HERE.
+        sense(true); // LAB 5 YOUR CODE HERE.
 
         /*
          *  Perform fast domain control.
@@ -84,7 +84,7 @@ realTimeTask(void* pvParameters)
              *  Perform slow domain sensing.
              *  See the Sensor class for details.
              */
-            // TODO LAB 5 YOUR CODE HERE.
+            sense(false); // LAB 5 YOUR CODE HERE.
 
             /*
              *  Perform slow domain control.
