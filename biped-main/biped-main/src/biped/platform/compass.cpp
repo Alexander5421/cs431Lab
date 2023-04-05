@@ -71,6 +71,7 @@ Compass::getCalibration() const
      *  Return class member calibration data struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    return calibration_;
 }
 
 void
@@ -83,6 +84,7 @@ Compass::initialize(IMUData& imu_data)
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    imu_data.attitude_z =degreesToRadians(atan2(imu_data.compass_y, imu_data.compass_x ));
 
     /*
      *  Configure Z attitude Kalman filter.
@@ -264,7 +266,7 @@ Compass::calculateAttitude(IMUData& imu_data)
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    const double attitude_z_raw = 0;
+    const double attitude_z_raw = atan2(imu_data.compass_y, imu_data.compass_x );
 
     /*
      *  Filter the raw Z attitude data using the Kalman filter.
@@ -279,6 +281,7 @@ Compass::calculateAttitude(IMUData& imu_data)
      *  the corresponding entry in the given IMU data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    imu_data.attitude_z =degreesToRadians(attitude_z_kalman_filter); 
 }
 
 void

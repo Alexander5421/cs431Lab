@@ -56,7 +56,7 @@ function install_arduino_cli()
 	# Install Arduino CLI
 	echo "[INFO]: Installing \"$arduino_cli_name $arduino_cli_version\"..."
 	tar -xzf "$arduino_cli_file"
-	sudo cp "$arduino_cli_name" "$arduino_cli_dir_install/$arduino_cli_name"
+	cp "$arduino_cli_name" "$arduino_cli_dir_install/$arduino_cli_name"
 	assert_warn $? "Failed to install \"$arduino_cli_name $arduino_cli_version\""
 	echo "[INFO]: Finished installing \"$arduino_cli_name $arduino_cli_version\"."
 

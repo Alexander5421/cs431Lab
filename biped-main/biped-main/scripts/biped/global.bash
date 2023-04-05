@@ -31,7 +31,7 @@ arduino_cli_file="$arduino_cli_file_linux"
 arduino_cli_url_linux="https://downloads.arduino.cc/arduino-cli/$arduino_cli_file_linux"
 arduino_cli_url_macos="https://downloads.arduino.cc/arduino-cli/$arduino_cli_file_macos"
 arduino_cli_url="$arduino_cli_url_linux"
-arduino_cli_dir_install="/usr/local/bin"
+arduino_cli_dir_install="$HOME/.local"
 
 # Declare Arduino ESP32 Core variables
 arduino_esp32_core_name="esp32:esp32"
