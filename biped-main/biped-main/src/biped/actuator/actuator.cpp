@@ -37,9 +37,9 @@ Actuator::Actuator()
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    int level = 0;
-    analogWrite(ESP32Pin::motor_left_pwm,level);
-    analogWrite(ESP32Pin::motor_right_pwm,level);
+    pinMode(ESP32Pin::motor_left_pwm,OUTPUT);
+    pinMode(ESP32Pin::motor_right_pwm,OUTPUT);
+
 
     /*
      *  Set pin mode for the motor direction and enable pins using
@@ -49,8 +49,9 @@ Actuator::Actuator()
     // TODO LAB 6 YOUR CODE HERE.
     if (io_expander_a_) {
         // TODO no such function
-        io_expander_a_->setBitInRegister(GPPUA,IOExpanderAPortAPin::motor_left_direction,true);
-        io_expander_a_->setBitInRegister(GPPUA,IOExpanderAPortAPin::motor_right_direction,true);
+        io_expander_a_->pinModePortB(IOExpanderAPortBPin::motor_enable,OUTPUT);
+        io_expander_a_->pinModePortA(IOExpanderAPortAPin::motor_right_direction,OUTPUT);
+        io_expander_a_->pinModePortA(IOExpanderAPortAPin::motor_left_direction,OUTPUT);
     }
 }
 
@@ -60,8 +61,8 @@ Actuator::getActuationCommand() const
     /*
      *  Return the member actuation command struct.
      */
-    return actuation_command_;
     // TODO LAB 6 YOUR CODE HERE.
+    return actuation_command_;
 }
 
 void
@@ -80,7 +81,7 @@ Actuator::actuate(const ActuationCommand& actuation_command)
      */
     // TODO LAB 6 YOUR CODE HERE.
     //todo no such function
-    io_expander_a_->digitalWrite(actuation_command_.motor_enable);
+    io_expander_a_->digitalWritePortA(IOExpanderAPortBPin::motor_enable,actuation_command_.motor_enable)
     /*
      *  Write motor directions from the member actuation
      *  command struct to the motor direction pins using the I/O expander
@@ -91,8 +92,8 @@ Actuator::actuate(const ActuationCommand& actuation_command)
      */
     // TODO LAB 6 YOUR CODE HERE.
     //todo no such function
-    io_expander_a_->setBitInRegister(GPPUA,IOExpanderAPortAPin::motor_left_direction,actuation_command_.motor_left_forward);
-    io_expander_a_->setBitInRegister(GPPUA,IOExpanderAPortAPin::motor_right_direction,actuation_command_.motor_left_forward);
+    io_expander_a_->digitalWritePortA(IOExpanderAPortAPin::motor_left_direction,actuation_command_.motor_left_forward);
+    io_expander_a_->digitalWritePortA(IOExpanderAPortAPin::motor_right_direction,actuation_command_.motor_left_forward);
     /*
      *  Clamp the motor PWM values from the member actuation
      *  command struct to be in between the minimum and the
