@@ -26,6 +26,8 @@ IMU::IMU() : bmx160_(&Wire)
      *  Initialize BMX160 and MPU6050 IMUs.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    initializeBMX160();
+    initializeMPU6050();
 }
 
 Compass::Calibration
@@ -45,6 +47,7 @@ IMU::getDataBMX160() const
      *  Return the class member BMX160 IMU data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    return bmx160_data_;
 }
 
 IMUData
@@ -54,6 +57,7 @@ IMU::getDataMPU6050() const
      *  Return the class member MPU6050 IMU data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    return mpu6050_data_;
 }
 
 void
@@ -90,6 +94,17 @@ IMU::readBMX160()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
+    bmx160_data_.compass_x = compass.magnetic.x;
+    bmx160_data_.compass_y = compass.magnetic.y;
+    bmx160_data_.compass_z = compass.magnetic.z;
+
+    bmx160_data_.angular_velocity_x = angular_velocity.gyro.y;
+    bmx160_data_.angular_velocity_y = angular_velocity.gyro.x;
+    bmx160_data_.angular_velocity_z = -angular_velocity.gyro.z;
+
+    bmx160_data_.acceleration_x = -acceleration.acceleration.y;
+    bmx160_data_.acceleration_y = -acceleration.acceleration.x;
+    bmx160_data_.acceleration_z = acceleration.acceleration.z;
 
     /*
      *  Execute BMX160 compass calibration using the populated
@@ -102,6 +117,7 @@ IMU::readBMX160()
      *  Perform attitude calculations for BMX160 IMU.
      */
     // TODO LAB 6 YOUR CODE HERE.
+     calculateAttitudeBMX160();
 }
 
 void
@@ -141,11 +157,21 @@ IMU::readMPU6050()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
+    mpu6050_data_.acceleration_x = acceleration.acceleration.x;
+    mpu6050_data_.acceleration_y = acceleration.acceleration.y;
+    mpu6050_data_.acceleration_z = acceleration.acceleration.z;
+
+    mpu6050_data_.angular_velocity_x = angular_velocity.gyro.x;
+    mpu6050_data_.angular_velocity_y = angular_velocity.gyro.y;
+    mpu6050_data_.angular_velocity_z = angular_velocity.gyro.z;
+
+    mpu6050_data_.temperature = temperature.temperature;
 
     /*
      *  Perform attitude calculations for MPU6050 IMU.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    calculateAttitudeMPU6050();
 }
 
 void
@@ -171,6 +197,7 @@ IMU::initializeBMX160()
      *  Perform initial BMX160 IMU read.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    readBMX160();
 
     /*
      *  Initialize BMX160 compass with the member BMX160
@@ -185,6 +212,7 @@ IMU::initializeBMX160()
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
+
 
     /*
      *  Configure Y attitude Kalman filter.
@@ -217,6 +245,7 @@ IMU::initializeMPU6050()
      *  Perform initial MPU6050 IMU read.
      */
     // TODO LAB 6 YOUR CODE HERE.
+     readMPU6050();
 
     /*
      *  Perform initial attitude calculations.
@@ -272,8 +301,7 @@ IMU::calculateAttitudeBMX160()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    const double attitude_y_raw = 0;
-
+    const double attitude_y_raw = atan2(bmx160_data_.compass_y, bmx160_data_.compass_x );
     /*
      *  Filter the raw Y attitude data using the Kalman filter.
      */
@@ -288,6 +316,7 @@ IMU::calculateAttitudeBMX160()
      *  struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    bmx160_data_.attitude_y = degreesToRadians(attitude_y_kalman_filter);
 
     /*
      *  Perform attitude calculations for BMX160 compass
@@ -334,7 +363,7 @@ IMU::calculateAttitudeMPU6050()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    const double attitude_y_raw = 0;
+    const double attitude_y_raw = 1;
 
     /*
      *  Filter the raw Y attitude data using the Kalman filter.
@@ -350,6 +379,7 @@ IMU::calculateAttitudeMPU6050()
      *  data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+     mpu6050_data_.attitude_y = degreesToRadians(attitude_y_kalman_filter);
 }
 
 void IRAM_ATTR
