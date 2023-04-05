@@ -99,16 +99,21 @@ Sensor::sense(const bool& fast_domain)
         /*
          *  Read encoders.
          */
+        // TODO LAB 5 YOUR CODE HERE.
+
         encoder_.read();
 
         /*
          *  Read BMX160.
          */
+        // TODO LAB 5 YOUR CODE HERE.
+
         imu_.readBMX160();
 
         /*
          *  Read MPU6050.
          */
+        // TODO LAB 5 YOUR CODE HERE.
         imu_.readMPU6050();
     }
     else
@@ -116,14 +121,15 @@ Sensor::sense(const bool& fast_domain)
         /*
          *  Calculate velocity.
          */
+        // TODO LAB 5 YOUR CODE HERE.
+
         encoder_.calculateVelocity();
 
         /*
          *  Read time-of-flight sensors.
          */
-        time_of_flight_left_->read();
-        time_of_flight_middle_->read();
-        time_of_flight_right_->read();
+        // TODO LAB 5 YOUR CODE HERE.
+
     }
 }
 

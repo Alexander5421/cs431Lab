@@ -16,6 +16,8 @@
 #include "platform/serial.h"
 #include "sensor/sensor.h"
 #include "task/task.h"
+#include <iomanip>
+
 
 namespace biped
 {
@@ -67,7 +69,10 @@ realTimeTask(void* pvParameters)
          *  Perform fast domain sensing.
          *  See the Sensor class for details.
          */
-        sense(true); // LAB 5 YOUR CODE HERE.
+        // TODO LAB 5 YOUR CODE HERE.
+
+        sensor_->sense(true);
+
 
         /*
          *  Perform fast domain control.
@@ -84,7 +89,10 @@ realTimeTask(void* pvParameters)
              *  Perform slow domain sensing.
              *  See the Sensor class for details.
              */
-            sense(false); // LAB 5 YOUR CODE HERE.
+            // TODO LAB 5 YOUR CODE HERE.
+
+            sensor_->sense(false);
+
 
             /*
              *  Perform slow domain control.
@@ -123,6 +131,15 @@ bestEffortTask()
     Display(1) << "Real-time: " << execution_time_real_time_task_ << " "
             << interval_real_time_task_;
 
+
+    // IMUData imudata = sensor_->getIMUDataMPU6050();
+    IMUData imudata = sensor_->getIMUDataBMX160();
+
+    Display(2) << "LinearAcc" << std::fixed << std::setprecision(2) << imudata.acceleration_x << " " << imudata.acceleration_y << " " << imudata.acceleration_z;
+    Display(3) << "AngV" << std::fixed << std::setprecision(2) << imudata.angular_velocity_x << " " << imudata.angular_velocity_y << " " << imudata.angular_velocity_z;
+    Display(4) << "c" << std::fixed << std::setprecision(2) << imudata.compass_x << " " << imudata.compass_y << " " << imudata.compass_z;
+    // print the yaw
+    Display(5) << "Yaw: " << std::fixed << std::setprecision(2) << imudata.attitude_y;
     /*
      *  Execute plan.
      *  See the Planner class for details.
@@ -134,6 +151,7 @@ bestEffortTask()
      *  See the NeoPixel class for details.
      */
     neopixel_->show();
+
 
     Display::display();
 }

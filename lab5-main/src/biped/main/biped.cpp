@@ -10,7 +10,6 @@
 #include <EEPROM.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-
 /*
  *  Project headers.
  */
@@ -29,6 +28,7 @@
  *  Use biped namespace.
  */
 using namespace biped;
+hw_timer_t * timer = NULL;
 
 void IRAM_ATTR test() {
     biped::Serial(LogLevel::info) << "test";
@@ -79,9 +79,19 @@ setup()
      *  An object must be instantiated first before
      *  its pointer can be used.
      */
-    // controller_ = std::make_shared<Controller>();
-    sensor_ = std::make_shared<Sensor>();
+    // TODO LAB 5 YOUR CODE HERE.
 
+    io_expander_a_ = std::make_shared<IOExpander>(AddressParameter::io_expander_a);
+    io_expander_b_ = std::make_shared<IOExpander>(AddressParameter::io_expander_b);
+    sensor_ = std::make_shared<Sensor>();
+    //...............?
+    BaseType_t io_e_a_int_task_created, io_e_b_int_task_created, rt_task_created;
+    // io_e_a_int_task_created = xTaskCreate(ioExpanderAInterruptTask, "I/O Expander A Interrupt Task", TaskParameter::stack_size, nullptr, (1|portPRIVILEGE_BIT), &task_handle_io_expander_a_interrupt_);
+    // io_e_b_int_task_created = xTaskCreate(ioExpanderBInterruptTask, "I/O Expander B Interrupt Task", TaskParameter::stack_size, nullptr, (1|portPRIVILEGE_BIT), &task_handle_io_expander_b_interrupt_);
+    rt_task_created = xTaskCreate(realTimeTask, "Real Time Task", TaskParameter::stack_size, nullptr, (1|portPRIVILEGE_BIT), &task_handle_real_time_);
+    
+
+   
     /*
      *  Set periods of Controller and Sensor.
      *  See the corresponding class for details.
@@ -89,10 +99,17 @@ setup()
      *  Remember to set both the fast and slow domain
      *  period for each class, if applicable.
      */
-    // controller_->setPeriodFast(ControllerParameter::period_fast);
-    // controller_->setPeriodSlow(ControllerParameter::period_slow);
-    sensor_->setPeriodFast(SensorParameter::period_fast);
-    sensor_->setPeriodSlow(SensorParameter::period_slow);
+    // TODO LAB 5 YOUR CODE HERE.
+    //..............?
+    timer = timerBegin(0, 80, true);
+    timerAttachInterrupt(timer, timerInterruptHandlerNoPra, true);
+    timerAlarmWrite(timer, 5000, true);  //PeriodParameter::fast;
+    timerAlarmEnable(timer);
+    
+
+    
+    
+
 
     /*
      *  Attach the corresponding interrupt handler to the left
@@ -106,8 +123,12 @@ setup()
     /*
      *  Enable timer thus starting the real-time tasks.
      */
-    // controller_->enableTimer();
-    sensor_->enableTimer();
+    // TODO LAB 5 YOUR CODE HERE.
+    //.................?
+    // add_int_handler(ESP32Pin::io_expander_a_interrupt, ioExpanderAInterruptHandler, GPIO_INTR_POSEDGE);
+    // add_int_handler(ESP32Pin::io_expander_b_interrupt, ioExpanderBInterruptHandler, GPIO_INTR_POSEDGE);
+
+    // add_int_handler(,timerInterruptHandler, ...........);
 
 
     if (biped::Serial::getLogLevelWorst() <= LogLevel::error)

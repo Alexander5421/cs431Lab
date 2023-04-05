@@ -62,8 +62,12 @@ ioExpanderAInterruptHandler();
 void IRAM_ATTR
 ioExpanderBInterruptHandler();
 
-bool IRAM_ATTR
+void IRAM_ATTR
 timerInterruptHandler(void* timer);
+
+void IRAM_ATTR
+timerInterruptHandlerNoPra();
+
 }
 
 #endif

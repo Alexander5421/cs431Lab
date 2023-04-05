@@ -77,7 +77,7 @@ ioExpanderBInterruptHandler()
     }
 }
 
-bool IRAM_ATTR
+void IRAM_ATTR
 timerInterruptHandler(void* timer)
 {
     if (task_handle_real_time_)
@@ -85,6 +85,14 @@ timerInterruptHandler(void* timer)
         vTaskNotifyGiveFromISR(task_handle_real_time_, nullptr);
     }
 
-    return true;
+    
+}
+
+void IRAM_ATTR
+timerInterruptHandlerNoPra()
+{
+    timerInterruptHandler( nullptr);
+
+    
 }
 }

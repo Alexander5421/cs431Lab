@@ -11,6 +11,8 @@ namespace biped
 {
 std::shared_ptr<NeoPixel> neopixel_ = nullptr;
 std::shared_ptr<Sensor> sensor_ = nullptr;
+std::shared_ptr<IOExpander> io_expander_a_ = nullptr;
+std::shared_ptr<IOExpander> io_expander_b_ = nullptr;
 
 std::mutex mutex_wire_;
 std::unique_lock<std::mutex> lock_wire_ = std::unique_lock<std::mutex>(mutex_wire_,
