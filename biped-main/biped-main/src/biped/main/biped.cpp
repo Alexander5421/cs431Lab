@@ -38,6 +38,7 @@
  */
 using namespace biped;
 
+
 /**
  *  @brief  Main program setup function.
  *
@@ -57,12 +58,19 @@ setup()
      */
     // TODO LAB 6 YOUR CODE HERE.
 
+    //..................?
+    pinMode(ESP32Pin::io_expander_a_interrupt,INPUT_PULLUP);
+    pinMode(ESP32Pin::io_expander_b_interrupt,INPUT_PULLUP);
+
     /*
      *  Set I2C driver object (Wire) SDA and SCL pins and set the
      *  serial object maximum log level.
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    Wire.setPins(ESP32Pin::i2c_sda,ESP32Pin::i2c_scl);
+
+    biped::Serial::setLogLevelMax(SerialParameter::log_level_max);
 
     /*
      *  Initialize I2C driver (Wire), EEPROM driver (EEPROM),
@@ -70,6 +78,11 @@ setup()
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    Wire.begin();
+    EEPROM.begin(EEPROMParameter::size);
+    Display::initialize();
+    biped::Serial::initialize();
+
 
     /*
      *  Instantiate all objects and store their shared pointers.
@@ -81,12 +94,23 @@ setup()
      *  See the global and parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    camera_ = new Camera();
+    io_expander_a_ = new IOExpander(AddressParameter::io_expander_a);
+    io_expander_b_ = new IOExpander(AddressParameter::io_expander_b);
+    actuator_ = new Actuator();
+    controller_ = new Controller();
+    neopixel_ = new NeoPixel();
+    planner_ = new Planner();//............
+    sensor_ = Sensor();
+    timer_ = new ESP32TimerInterrupt(1);    //..........Timer Group 1 (Due to Arduino, you should not use timer group 0.)
 
     /*
      *  Read and store the serial number from the EEPROM.
      *  See the global and parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+
+    serial_number_ = static_cast<unsigned int>(EEPROM.read(AddressParameter::eeprom_serial_number));
 
     /*
      *  Set controller periods.
@@ -106,6 +130,25 @@ setup()
      *  See the global and parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    xTaskCreatePinnedToCore(
+        ioExpanderAInterruptTask,   
+        "I/O Expander A Interrupt Task",
+        TaskParameter::stack_size,
+        NULL,
+        TaskParameter::priority_max,
+        task_handle_io_expander_a_interrupt_,
+        TaskParameter::core_1     
+    );
+
+    xTaskCreatePinnedToCore(
+        ioExpanderBInterruptTask,   
+        "I/O Expander B Interrupt Task",
+        TaskParameter::stack_size,
+        NULL,
+        TaskParameter::priority_max,
+        task_handle_io_expander_b_interrupt_,
+        TaskParameter::core_1     
+    );
 
     /*
      *  Attach the I/O expander and encoder interrupt handlers.
@@ -115,6 +158,15 @@ setup()
      *  See the interrupt and parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+
+    attachInterrupt(ESP32Pin::io_expander_a_interrupt,ioExpanderAInterruptHandler,RISING);
+    attachInterrupt(ESP32Pin::io_expander_b_interrupt,ioExpanderBInterruptHandler,RISING);
+
+    attachInterrupt(ESP32Pin::motor_left_encoder_a,encoderLeftAInterruptHandler,CHANGE);
+    attachInterrupt(ESP32Pin::motor_left_encoder_b,encoderLeftBInterruptHandler,CHANGE);
+    attachInterrupt(ESP32Pin::motor_right_encoder_a,encoderRightAInterruptHandler,CHANGE);
+    attachInterrupt(ESP32Pin::motor_right_encoder_b,encoderRightBInterruptHandler,CHANGE);
+
 
     /*
      *  Set pin mode for the push button pins using
@@ -142,11 +194,43 @@ setup()
      */
     // TODO LAB 6 YOUR CODE HERE.
 
+    xTaskCreatePinnedToCore(
+        realTimeTask,   
+        "Real-Time Task",
+        TaskParameter::stack_size,
+        NULL,
+        TaskParameter::priority_max-1,
+        task_handle_real_time_,
+        TaskParameter::core_1     
+    );
+
+    xTaskCreatePinnedToCore(
+        wiFiTask,   
+        "Wi-Fi Task",
+        TaskParameter::stack_size,
+        NULL,
+        TaskParameter::priority_min,
+        task_handle_wifi_,
+        TaskParameter::core_1     
+    );
+
+    xTaskCreatePinnedToCore(
+        cameraTask,   
+        "Camera Task",
+        TaskParameter::stack_size,
+        NULL,
+        TaskParameter::priority_min,
+        task_handle_camera_,
+        TaskParameter::core_1     
+    );
+
     /*
      *  Attach the timer interrupt handler to the interrupt timer.
      *  See the interrupt header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+
+    //..................................................
 
     /*
      *  Print initialization status to serial based on
@@ -176,4 +260,6 @@ loop()
      *  Perform best-effort tasks.
      */
     // TODO LAB 6 YOUR CODE HERE.
+
+    bestEffortTask();
 }

@@ -46,12 +46,18 @@ ioExpanderAInterruptTask(void* pvParameters)
          */
         // TODO LAB 6 YOUR CODE HERE.
 
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
         /*
          *  Validate I/O expander A object pointer and call the I/O
          *  expander interrupt callback function.
          *  See the I/O expander class for details.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        if (io_expander_a_)
+        {
+            io_expander_a_->onInterrupt();
+        }
     }
 
     /*
@@ -59,6 +65,7 @@ ioExpanderAInterruptTask(void* pvParameters)
      *  vTaskDelete function.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    vTaskDelete(nullptr);
 }
 
 void
@@ -72,6 +79,7 @@ ioExpanderBInterruptTask(void* pvParameters)
          *  task wait time to be maximum delay.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         /*
          *  Validate I/O expander B object pointer and call the I/O
@@ -79,6 +87,10 @@ ioExpanderBInterruptTask(void* pvParameters)
          *  See the I/O expander class for details.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        if (io_expander_b_)
+        {
+            io_expander_b_->onInterrupt();
+        }
     }
 
     /*
@@ -86,6 +98,7 @@ ioExpanderBInterruptTask(void* pvParameters)
      *  vTaskDelete function.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    vTaskDelete(nullptr);
 }
 
 void
@@ -109,6 +122,7 @@ cameraTask(void* pvParameters)
      *  vTaskDelete function.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    vTaskDelete(nullptr);
 }
 
 void
@@ -125,6 +139,7 @@ wiFiTask(void* pvParameters)
      *  vTaskDelete function.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    vTaskDelete(nullptr);
 }
 
 void
@@ -143,6 +158,7 @@ realTimeTask(void* pvParameters)
          *  task wait time to be maximum delay.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
 
         /*
          *  Calculate real-time task interval and update start
@@ -156,6 +172,7 @@ realTimeTask(void* pvParameters)
          *  See the sensor class for details.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        sensor_->sense(true);
 
         /*
          *  Perform fast domain control.
@@ -173,6 +190,7 @@ realTimeTask(void* pvParameters)
              *  See the sensor class for details.
              */
             // TODO LAB 6 YOUR CODE HERE.
+            sensor_->sense(false);
 
             /*
              *  Perform slow domain control.
@@ -209,6 +227,7 @@ realTimeTask(void* pvParameters)
      *  vTaskDelete function.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    vTaskDelete(nullptr);
 }
 
 void
@@ -286,11 +305,13 @@ bestEffortTask()
      *  See the NeoPixel class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    neopixel_->show();
 
     /*
      *  Flush the display driver buffer to the display.
      *  See the display class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    Display::display();
 }
 }   // namespace biped

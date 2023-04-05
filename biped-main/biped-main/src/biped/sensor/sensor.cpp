@@ -29,6 +29,11 @@ Sensor::Sensor()
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    if (io_expander_a_) {
+        io_expander_a_->pinModePortA(IOExpanderAPortAPin::time_of_flight_left_shutdown, OUTPUT);
+        io_expander_a_->pinModePortB(IOExpanderAPortBPin::time_of_flight_middle_shutdown, OUTPUT);
+        io_expander_a_->pinModePortB(IOExpanderAPortBPin::time_of_flight_right_shutdown, OUTPUT);
+    }
 
     /*
      *  Instantiate all time-of-flight objects and store
@@ -36,6 +41,17 @@ Sensor::Sensor()
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    time_of_flight_left_ = std::unique_ptr<TimeOfFlight>(
+            new TimeOfFlight(AddressParameter::time_of_flight_left,
+                    IOExpanderAPortAPin::time_of_flight_left_shutdown, io_expander_a_));
+    time_of_flight_middle_ = std::unique_ptr<TimeOfFlight>(
+            new TimeOfFlight(AddressParameter::time_of_flight_middle,
+                    IOExpanderAPortBPin::time_of_flight_middle_shutdown
+                            + IOExpanderParameter::num_port_pins, io_expander_a_));
+    time_of_flight_right_ = std::unique_ptr<TimeOfFlight>(
+            new TimeOfFlight(AddressParameter::time_of_flight_right,
+                    IOExpanderAPortBPin::time_of_flight_right_shutdown
+                            + IOExpanderParameter::num_port_pins, io_expander_a_));
 }
 
 Compass::Calibration
@@ -56,6 +72,7 @@ Sensor::getEncoderData() const
      *  object and return the struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    return encoder_.getData();
 }
 
 IMUData
@@ -66,6 +83,7 @@ Sensor::getIMUDataBMX160() const
      *  object and return the struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    return imu_.getDataBMX160();
 }
 
 IMUData
@@ -76,6 +94,7 @@ Sensor::getIMUDataMPU6050() const
      *  object and return the struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    return imu_.getDataMPU6050();
 }
 
 TimeOfFlightData
@@ -85,6 +104,7 @@ Sensor::getTimeOfFlightData() const
      *  Return the class member time-of-flight data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    return time_of_flight_data_;
 }
 
 void
@@ -117,16 +137,19 @@ Sensor::sense(const bool& fast_domain)
          *  Read encoders.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        encoder_.read();
 
         /*
          *  Read BMX160 IMU.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        imu_.readBMX160();
 
         /*
          *  Read MPU6050 IMU.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        imu_.readMPU6050();
     }
     else
     {
@@ -134,11 +157,15 @@ Sensor::sense(const bool& fast_domain)
          *  Calculate velocity.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        encoder_.calculateVelocity();
 
         /*
          *  Read time-of-flight sensors.
          */
         // TODO LAB 6 YOUR CODE HERE.
+        time_of_flight_data_.range_left = time_of_flight_left_->read();
+        time_of_flight_data_.range_middle = time_of_flight_middle_->read();
+        time_of_flight_data_.range_right = time_of_flight_right_->read();
     }
 }
 
@@ -150,6 +177,7 @@ Sensor::onEncoderLeftA()
      *  See the encoder class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    encoder_.onLeftA();
 }
 
 void IRAM_ATTR
@@ -160,6 +188,7 @@ Sensor::onEncoderLeftB()
      *  See the encoder class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    encoder_.onLeftB();
 }
 
 void IRAM_ATTR
@@ -170,6 +199,7 @@ Sensor::onEncoderRightA()
      *  See the encoder class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    encoder_.onRightA();
 }
 
 void IRAM_ATTR
@@ -180,6 +210,7 @@ Sensor::onEncoderRightB()
      *  See the encoder class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    encoder_.onRightB();
 }
 
 void IRAM_ATTR

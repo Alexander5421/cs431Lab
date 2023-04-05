@@ -144,6 +144,9 @@ encoderLeftAInterruptHandler()
      *  See the sensor class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    if (sensor_) {
+        sensor_->onEncoderLeftA();
+    }
 }
 
 void IRAM_ATTR
@@ -155,6 +158,9 @@ encoderLeftBInterruptHandler()
      *  See the sensor class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    if (sensor_) {
+        sensor_->onEncoderLeftB();
+    }
 }
 
 void IRAM_ATTR
@@ -166,6 +172,9 @@ encoderRightAInterruptHandler()
      *  See the sensor class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    if (sensor_) {
+        sensor_->onEncoderRightA();
+    }
 }
 
 void IRAM_ATTR
@@ -177,6 +186,9 @@ encoderRightBInterruptHandler()
      *  See the sensor class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    if (sensor_) {
+        sensor_->onEncoderRightB();
+    }
 }
 
 void IRAM_ATTR
@@ -189,6 +201,9 @@ ioExpanderAInterruptHandler()
      *  See the global and task header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    if (task_handle_io_expander_a_interrupt_) {
+        vTaskNotifyGiveFromISR(task_handle_io_expander_a_interrupt_,nullptr);
+    }
 }
 
 void IRAM_ATTR
@@ -201,6 +216,9 @@ ioExpanderBInterruptHandler()
      *  See the global and task header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    if (task_handle_io_expander_b_interrupt_) {
+        vTaskNotifyGiveFromISR(task_handle_io_expander_b_interrupt_, nullptr);
+    }
 }
 
 void IRAM_ATTR
@@ -233,6 +251,9 @@ timerInterruptHandler(void* timer)
      *  See the global and task header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    if (task_handle_real_time_) {
+        vTaskNotifyGiveFromISR(task_handle_real_time_,nullptr);
+    }
 
     return true;
 }
