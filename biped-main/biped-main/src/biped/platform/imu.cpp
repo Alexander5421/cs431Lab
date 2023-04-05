@@ -212,7 +212,7 @@ IMU::initializeBMX160()
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
-
+    bmx160_data_.attitude_y = degreesToRadians( actan2(bmx160_data_.acceleration_x,bmx160_data_.acceleration_z));
 
     /*
      *  Configure Y attitude Kalman filter.
@@ -254,7 +254,7 @@ IMU::initializeMPU6050()
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
-
+    mpu6050_data_.attitude_y = degreesToRadians( actan2(mpu6050_data_.acceleration_x,mpu6050_data_.acceleration_z));
     /*
      *  Configure Y attitude Kalman filter.
      */
@@ -301,7 +301,7 @@ IMU::calculateAttitudeBMX160()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    const double attitude_y_raw = atan2(bmx160_data_.compass_y, bmx160_data_.compass_x );
+    const double attitude_y_raw = actan2(bmx160_data_.acceleration_x,bmx160_data_.acceleration_z);
     /*
      *  Filter the raw Y attitude data using the Kalman filter.
      */
@@ -363,7 +363,7 @@ IMU::calculateAttitudeMPU6050()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    const double attitude_y_raw = 1;
+    const double attitude_y_raw = actan2(mpu6050_data_.acceleration_x,mpu6050_data_.acceleration_z);
 
     /*
      *  Filter the raw Y attitude data using the Kalman filter.
