@@ -36,6 +36,10 @@ Encoder::Encoder() : steps_left_(0), steps_right_(0)
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    pinMode(ESP32Pin::motor_left_encoder_a,INPUT_PULLUP);
+    pinMode(ESP32Pin::motor_left_encoder_b,INPUT_PULLUP);
+    pinMode(ESP32Pin::motor_right_encoder_a,INPUT_PULLUP);
+    pinMode(ESP32Pin::motor_right_encoder_b,INPUT_PULLUP);
 
     /*
      *  Configure X velocity low-pass filter.
@@ -50,6 +54,7 @@ Encoder::getData() const
      *  Return the class member encoder data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    return data_;
 }
 
 void
@@ -65,6 +70,10 @@ Encoder::read()
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    long averaged_step_count = (long)((steps_left_ + steps_right_)/2);
+
+    data_.position_x = (double)(averaged_step_count*1.0/EncoderParameter::steps_per_meter);
+    data_.steps = (double)averaged_step_count;
 }
 
 void
@@ -79,6 +88,7 @@ Encoder::calculateVelocity()
      *  Read encoders.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    read();
 
     /*
      *  Calculate the step count since the last overall encoder step
@@ -90,19 +100,25 @@ Encoder::calculateVelocity()
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    double steps_since_last_update = data_.steps - steps_last;
+    double displacement_x_since_last_update = (double)(steps_since_last_update/EncoderParameter::steps_per_meter);
+    double velocity_x = displacement_x_since_last_update/PeriodParameter::slow;
+    double filtered_velocity_x = low_pass_filter_velocity_x_.filter(velocity_x);
+    data_.velocity_x = filtered_velocity_x;
 
     /*
      *  Set last overall encoder step counter to be the current
      *  overall encoder step count.
      */
     // TODO LAB 6 YOUR CODE HERE.
+    steps_last = data_.steps;
 }
 
 void IRAM_ATTR
 Encoder::onLeftA()
 {
     /*
-     *  Read left encoder pin states using digitalReadFromISR
+     *  Read left encoder pin states using digitalReadFromISR...............?
      *  function and increment/decrement the left encoder step
      *  counters based on the pin states read.
      *
@@ -110,13 +126,15 @@ Encoder::onLeftA()
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/
      */
     // TODO LAB 6 YOUR CODE HERE.
+    digitalReadFromISR(ESP32Pin::motor_left_encoder_a) != digitalReadFromISR(ESP32Pin::motor_left_encoder_b) ?
+            steps_left_ ++ : steps_left_ --;
 }
 
 void IRAM_ATTR
 Encoder::onLeftB()
 {
     /*
-     *  Read left encoder pin states using digitalReadFromISR
+     *  Read left encoder pin states using digitalReadFromISR.................?
      *  function and increment/decrement the left encoder step
      *  counters based on the pin states read.
      *
@@ -124,13 +142,15 @@ Encoder::onLeftB()
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/
      */
     // TODO LAB 6 YOUR CODE HERE.
+    digitalReadFromISR(ESP32Pin::motor_left_encoder_b) == digitalReadFromISR(ESP32Pin::motor_left_encoder_a) ?
+            steps_left_ ++ : steps_left_ --;
 }
 
 void IRAM_ATTR
 Encoder::onRightA()
 {
     /*
-     *  Read right encoder pin states using digitalReadFromISR
+     *  Read right encoder pin states using digitalReadFromISR............?
      *  function and increment/decrement the right encoder step
      *  counters based on the pin states read.
      *
@@ -138,13 +158,15 @@ Encoder::onRightA()
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/
      */
     // TODO LAB 6 YOUR CODE HERE.
+    digitalReadFromISR(ESP32Pin::motor_right_encoder_a) == digitalReadFromISR(ESP32Pin::motor_right_encoder_b) ?
+            steps_right_ ++ : steps_right_ --;
 }
 
 void IRAM_ATTR
 Encoder::onRightB()
 {
     /*
-     *  Read right encoder pin states using digitalReadFromISR
+     *  Read right encoder pin states using digitalReadFromISR.................?
      *  function and increment/decrement the right encoder step
      *  counters based on the pin states read.
      *
@@ -152,5 +174,7 @@ Encoder::onRightB()
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/
      */
     // TODO LAB 6 YOUR CODE HERE.
+    digitalReadFromISR(ESP32Pin::motor_right_encoder_b) != digitalReadFromISR(ESP32Pin::motor_right_encoder_a) ?
+            steps_right_ ++ : steps_right_ --;
 }
 }   // namespace biped

@@ -94,15 +94,18 @@ setup()
      *  See the global and parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    camera_ = new Camera();
-    io_expander_a_ = new IOExpander(AddressParameter::io_expander_a);
-    io_expander_b_ = new IOExpander(AddressParameter::io_expander_b);
-    actuator_ = new Actuator();
-    controller_ = new Controller();
-    neopixel_ = new NeoPixel();
-    planner_ = new Planner();//............
-    sensor_ = Sensor();
-    timer_ = new ESP32TimerInterrupt(1);    //..........Timer Group 1 (Due to Arduino, you should not use timer group 0.)
+    hw_timer_t * timer = NULL;
+    camera_ = std::make_shared<Camera>();
+    io_expander_a_ = std::make_shared<IOExpander>(AddressParameter::io_expander_a);
+    io_expander_b_ = std::make_shared<IOExpander>(AddressParameter::io_expander_b);
+    actuator_ = std::make_shared<Actuator>();
+    controller_ = std::make_shared<Controller>();
+    neopixel_ = std::make_shared<NeoPixel>();
+    // planner_ = std::make_shared<Planner>();
+    sensor_ = std::make_shared<Sensor>();
+    timer_ = std::make_shared<ESP32TimerInterrupt>(1);
+
+    biped::Serial(LogLevel::info) << "Instantiate all objects and store their shared pointers.";
 
     /*
      *  Read and store the serial number from the EEPROM.
@@ -136,7 +139,7 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_max,
-        task_handle_io_expander_a_interrupt_,
+        &task_handle_io_expander_a_interrupt_,
         TaskParameter::core_1     
     );
 
@@ -146,9 +149,11 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_max,
-        task_handle_io_expander_b_interrupt_,
+        &task_handle_io_expander_b_interrupt_,
         TaskParameter::core_1     
     );
+
+    biped::Serial(LogLevel::info) << "Expander Tasks Created";
 
     /*
      *  Attach the I/O expander and encoder interrupt handlers.
@@ -159,14 +164,15 @@ setup()
      */
     // TODO LAB 6 YOUR CODE HERE.
 
-    attachInterrupt(ESP32Pin::io_expander_a_interrupt,ioExpanderAInterruptHandler,RISING);
-    attachInterrupt(ESP32Pin::io_expander_b_interrupt,ioExpanderBInterruptHandler,RISING);
+    biped::attachInterrupt(ESP32Pin::io_expander_a_interrupt,ioExpanderAInterruptHandler,RISING);
+    biped::attachInterrupt(ESP32Pin::io_expander_b_interrupt,ioExpanderBInterruptHandler,RISING);
 
-    attachInterrupt(ESP32Pin::motor_left_encoder_a,encoderLeftAInterruptHandler,CHANGE);
-    attachInterrupt(ESP32Pin::motor_left_encoder_b,encoderLeftBInterruptHandler,CHANGE);
-    attachInterrupt(ESP32Pin::motor_right_encoder_a,encoderRightAInterruptHandler,CHANGE);
-    attachInterrupt(ESP32Pin::motor_right_encoder_b,encoderRightBInterruptHandler,CHANGE);
+    biped::attachInterrupt(ESP32Pin::motor_left_encoder_a,encoderLeftAInterruptHandler,CHANGE);
+    biped::attachInterrupt(ESP32Pin::motor_left_encoder_b,encoderLeftBInterruptHandler,CHANGE);
+    biped::attachInterrupt(ESP32Pin::motor_right_encoder_a,encoderRightAInterruptHandler,CHANGE);
+    biped::attachInterrupt(ESP32Pin::motor_right_encoder_b,encoderRightBInterruptHandler,CHANGE);
 
+    biped::Serial(LogLevel::info) << "Interrupts attached";
 
     /*
      *  Set pin mode for the push button pins using
@@ -200,7 +206,7 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_max-1,
-        task_handle_real_time_,
+        &task_handle_real_time_,
         TaskParameter::core_1     
     );
 
@@ -210,7 +216,7 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_min,
-        task_handle_wifi_,
+        &task_handle_wifi_,
         TaskParameter::core_1     
     );
 
@@ -220,17 +226,24 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_min,
-        task_handle_camera_,
+        &task_handle_camera_,
         TaskParameter::core_1     
     );
+
+    biped::Serial(LogLevel::info) << "Remaining tasks created";
 
     /*
      *  Attach the timer interrupt handler to the interrupt timer.
      *  See the interrupt header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
-
-    //..................................................
+    timer_->attachInterruptInterval(5000,&timerInterruptHandler);
+    // //..................................................
+    // timer_ =attachInterruptIn
+    // timer = timerBegin(0, 80, true);
+    // timerAttachInterrupt(timer, biped::timerInterruptHandlerNoPra, true);
+    // timerAlarmWrite(timer, 5000, true);  //PeriodParameter::fast;
+    // timerAlarmEnable(timer);
 
     /*
      *  Print initialization status to serial based on
@@ -262,4 +275,5 @@ loop()
     // TODO LAB 6 YOUR CODE HERE.
 
     bestEffortTask();
+    delay(500);
 }

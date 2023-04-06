@@ -220,6 +220,7 @@ Controller::getActiveStatus() const
      *  Return the controller active flag.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    return false;
 }
 
 ControllerReference

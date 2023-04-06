@@ -90,7 +90,7 @@ Actuator::actuate(const ActuationCommand& actuation_command)
      *  with both motor_left_forward and motor_right_forward set to true.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    io_expander_a_->digitalWritePortA(IOExpanderAPortAPin::motor_left_direction,actuation_command_.motor_left_forward);
+    io_expander_a_->digitalWritePortA(IOExpanderAPortAPin::motor_left_direction,!actuation_command_.motor_left_forward);
     io_expander_a_->digitalWritePortA(IOExpanderAPortAPin::motor_right_direction,actuation_command_.motor_right_forward);
 
     /*
@@ -109,9 +109,9 @@ Actuator::actuate(const ActuationCommand& actuation_command)
      *  instead of digitalWrite.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    double motor_left_pwm_clamped = clamp(actuation_command_.motor_left_pwm, static_cast<double> MotorParameter::pwm_min, static_cast<double> MotorParameter::pwm_max);
-    double motor_right_pwm_clamped = clamp(actuation_command_.motor_right_pwm, static_cast<double> MotorParameter::pwm_min, static_cast<double> MotorParameter::pwm_max);
-    analogWrite(ESP32Pin::motor_left_pwm,static_cast<int>motor_left_pwm_clamped);
-    analogWrite(ESP32Pin::motor_right_pwm,static_cast<int>motor_right_pwm_clamped);
+    double motor_left_pwm_clamped = clamp(actuation_command_.motor_left_pwm, static_cast<double>( MotorParameter::pwm_min), static_cast<double>( MotorParameter::pwm_max));
+    double motor_right_pwm_clamped = clamp(actuation_command_.motor_right_pwm, static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
+    analogWrite(ESP32Pin::motor_left_pwm,static_cast<int>(motor_left_pwm_clamped));
+    analogWrite(ESP32Pin::motor_right_pwm,static_cast<int>(motor_right_pwm_clamped));
 }
 }   // namespace biped
