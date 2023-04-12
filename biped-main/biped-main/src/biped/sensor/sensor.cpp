@@ -62,6 +62,7 @@ Sensor::getCompassCalibrationBMX160() const
      *  member IMU object and return the struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    return imu_.getCompassCalibrationBMX160();
 }
 
 EncoderData
@@ -221,5 +222,6 @@ Sensor::onPushButtonB()
      *  See the IMU class for details.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    imu_.onPushButtonB();
 }
 }   // namespace biped
