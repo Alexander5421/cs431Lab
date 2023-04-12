@@ -102,10 +102,7 @@ Compass::startCalibration()
      *  Set calibration start flag to true if not.
      */
     // TODO LAB 7 YOUR CODE HERE.
-    if (!calibration_started_)
-    {
-        calibration_started_ = true;
-    }
+    calibration_started_ = true;
 }
 
 void

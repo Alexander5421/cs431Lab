@@ -83,7 +83,7 @@ public:
 
     /**
      *  @brief  BMX160 reading function.
-     *
+     *(
      *  This function reads data from the BMX160 IMU, populates the
      *  corresponding entries in the member BMX160 IMU data struct,
      *  executes the BMX160 compass calibration, and calculates
@@ -91,6 +91,12 @@ public:
      */
     void
     readBMX160();
+
+    void
+    firstfirstReadBMX160();
+
+    void 
+    firstReadMPU6050();
 
     /**
      *  @brief  MPU6050 reading function.

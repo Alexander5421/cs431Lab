@@ -60,7 +60,46 @@ IMU::getDataMPU6050() const
     // TODO LAB 6 YOUR CODE HERE.
     return mpu6050_data_;
 }
+// do all readBMX160 did except the calibaration and calculation
+void::firstReadBMX160(){
+    sBmx160SensorData_t compass;
+    sBmx160SensorData_t angular_velocity;
+    sBmx160SensorData_t acceleration;
+    bmx160_.getAllData(&compass, &angular_velocity, &acceleration);
+    bmx160_data_.compass_x = compass.x;
+    bmx160_data_.compass_y = compass.y;
+    bmx160_data_.compass_z = compass.z;
 
+    bmx160_data_.angular_velocity_x = angular_velocity.y;
+    bmx160_data_.angular_velocity_y = angular_velocity.x;
+    bmx160_data_.angular_velocity_z = -angular_velocity.z;
+
+    bmx160_data_.acceleration_x = -acceleration.y;
+    bmx160_data_.acceleration_y = -acceleration.x;
+    bmx160_data_.acceleration_z = acceleration.z;
+    mpu6050_data_.temperature = temperature.temperature;
+    bmx160_data_.temperature = 0;
+}
+
+void::firstReadMPU6050(){
+    sensors_event_t acceleration;
+    sensors_event_t angular_velocity;
+    sensors_event_t temperature;
+    if (!mpu6050_.getEvent(&acceleration, &angular_velocity, &temperature))
+    {
+        Serial(LogLevel::error) << "Failed to read from MPU6050.";
+        return;
+    }
+       mpu6050_data_.acceleration_x = acceleration.acceleration.x;
+    mpu6050_data_.acceleration_y = acceleration.acceleration.y;
+    mpu6050_data_.acceleration_z = acceleration.acceleration.z;
+
+    mpu6050_data_.angular_velocity_x = angular_velocity.gyro.x;
+    mpu6050_data_.angular_velocity_y = angular_velocity.gyro.y;
+    mpu6050_data_.angular_velocity_z = angular_velocity.gyro.z;
+
+    mpu6050_data_.temperature = temperature.temperature;
+}
 void
 IMU::readBMX160()
 {
@@ -98,14 +137,13 @@ IMU::readBMX160()
     bmx160_data_.compass_x = compass.x;
     bmx160_data_.compass_y = compass.y;
     bmx160_data_.compass_z = compass.z;
-
-    bmx160_data_.angular_velocity_x = angular_velocity.y;
-    bmx160_data_.angular_velocity_y = angular_velocity.x;
-    bmx160_data_.angular_velocity_z = -angular_velocity.z;
-
-    bmx160_data_.acceleration_x = -acceleration.y;
-    bmx160_data_.acceleration_y = -acceleration.x;
+    bmx160_data_.angular_velocity_x = angular_velocity.x;
+    bmx160_data_.angular_velocity_y = angular_velocity.y;
+    bmx160_data_.angular_velocity_z = angular_velocity.z;
+    bmx160_data_.acceleration_x = acceleration.x;
+    bmx160_data_.acceleration_y = acceleration.y;
     bmx160_data_.acceleration_z = acceleration.z;
+    // bmx160_data_.temperature = 0;
 
     /*
      *  Execute BMX160 compass calibration using the populated
@@ -119,7 +157,7 @@ IMU::readBMX160()
      *  Perform attitude calculations for BMX160 IMU.
      */
     // TODO LAB 6 YOUR CODE HERE.
-     calculateAttitudeBMX160();
+    calculateAttitudeBMX160();
 }
 
 void
@@ -159,14 +197,15 @@ IMU::readMPU6050()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    mpu6050_data_.acceleration_x = acceleration.acceleration.x;
-    mpu6050_data_.acceleration_y = acceleration.acceleration.y;
-    mpu6050_data_.acceleration_z = acceleration.acceleration.z;
-
-    mpu6050_data_.angular_velocity_x = angular_velocity.gyro.x;
-    mpu6050_data_.angular_velocity_y = angular_velocity.gyro.y;
-    mpu6050_data_.angular_velocity_z = angular_velocity.gyro.z;
-
+    mpu6050_data_.acceleration_x = acceleration.x;
+    mpu6050_data_.acceleration_y = acceleration.y;
+    mpu6050_data_.acceleration_z = acceleration.z;
+    mpu6050_data_.angular_velocity_x = angular_velocity.x;
+    mpu6050_data_.angular_velocity_y = angular_velocity.y;
+    mpu6050_data_.angular_velocity_z = angular_velocity.z;
+    // mpu6050_data_.compass_x = 0;
+    // mpu6050_data_.compass_y = 0;
+    // mpu6050_data_.compass_z = 0;
     mpu6050_data_.temperature = temperature.temperature;
 
     /*
@@ -199,7 +238,7 @@ IMU::initializeBMX160()
      *  Perform initial BMX160 IMU read.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    readBMX160();
+    firstReadBMX160();
 
     /*
      *  Initialize BMX160 compass with the member BMX160
@@ -215,7 +254,7 @@ IMU::initializeBMX160()
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    bmx160_data_.attitude_y = degreesToRadians( atan2(bmx160_data_.acceleration_x,bmx160_data_.acceleration_z));
+    bmx160_data_.attitude_y = atan2(bmx160_data_.acceleration_x,bmx160_data_.acceleration_z);
 
     /*
      *  Configure Y attitude Kalman filter.
@@ -248,7 +287,8 @@ IMU::initializeMPU6050()
      *  Perform initial MPU6050 IMU read.
      */
     // TODO LAB 6 YOUR CODE HERE.
-     readMPU6050();
+    firstReadMPU6050();
+    
 
     /*
      *  Perform initial attitude calculations.
@@ -257,7 +297,8 @@ IMU::initializeMPU6050()
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    mpu6050_data_.attitude_y = degreesToRadians( atan2(mpu6050_data_.acceleration_x,mpu6050_data_.acceleration_z));
+    mpu6050_data_.attitude_y = atan2(mpu6050_data_.acceleration_x,mpu6050_data_.acceleration_z);
+
     /*
      *  Configure Y attitude Kalman filter.
      */
@@ -305,6 +346,7 @@ IMU::calculateAttitudeBMX160()
      */
     // TODO LAB 6 YOUR CODE HERE.
     const double attitude_y_raw = atan2(bmx160_data_.acceleration_x,bmx160_data_.acceleration_z);
+
     /*
      *  Filter the raw Y attitude data using the Kalman filter.
      */
@@ -327,9 +369,7 @@ IMU::calculateAttitudeBMX160()
      *  See the compass class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
-
     bmx160_compass_.calculateAttitude(bmx160_data_);
-    
 }
 
 void
@@ -385,7 +425,7 @@ IMU::calculateAttitudeMPU6050()
      *  data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
-     mpu6050_data_.attitude_y = degreesToRadians(attitude_y_kalman_filter);
+    mpu6050_data_.attitude_y = degreesToRadians(attitude_y_kalman_filter);
 }
 
 void IRAM_ATTR
