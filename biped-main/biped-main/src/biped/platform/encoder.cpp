@@ -70,9 +70,9 @@ Encoder::read()
      *  See the parameter header for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    long averaged_step_count = (long)((steps_left_ + steps_right_)/2);
+    double averaged_step_count = (double)(steps_left_ + steps_right_)/2.0;
 
-    data_.position_x = (double)(averaged_step_count*1.0/EncoderParameter::steps_per_meter);
+    data_.position_x = averaged_step_count/(double)EncoderParameter::steps_per_meter;
     data_.steps = (double)averaged_step_count;
 }
 
@@ -101,7 +101,7 @@ Encoder::calculateVelocity()
      */
     // TODO LAB 6 YOUR CODE HERE.
     double steps_since_last_update = data_.steps - steps_last;
-    double displacement_x_since_last_update = (double)(steps_since_last_update/EncoderParameter::steps_per_meter);
+    double displacement_x_since_last_update = steps_since_last_update/(double)EncoderParameter::steps_per_meter;
     double velocity_x = displacement_x_since_last_update/PeriodParameter::slow;
     double filtered_velocity_x = low_pass_filter_velocity_x_.filter(velocity_x);
     data_.velocity_x = filtered_velocity_x;
@@ -118,12 +118,12 @@ void IRAM_ATTR
 Encoder::onLeftA()
 {
     /*
-     *  Read left encoder pin states using digitalReadFromISR...............?
+     *  Read left encoder pin states using digitalReadFromISR 
      *  function and increment/decrement the left encoder step
      *  counters based on the pin states read.
      *
      *  Incremental rotary encoder references:
-     *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/
+     *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/..........................
      */
     // TODO LAB 6 YOUR CODE HERE.
     digitalReadFromISR(ESP32Pin::motor_left_encoder_a) != digitalReadFromISR(ESP32Pin::motor_left_encoder_b) ?
@@ -134,7 +134,7 @@ void IRAM_ATTR
 Encoder::onLeftB()
 {
     /*
-     *  Read left encoder pin states using digitalReadFromISR.................?
+     *  Read left encoder pin states using digitalReadFromISR
      *  function and increment/decrement the left encoder step
      *  counters based on the pin states read.
      *
@@ -150,7 +150,7 @@ void IRAM_ATTR
 Encoder::onRightA()
 {
     /*
-     *  Read right encoder pin states using digitalReadFromISR............?
+     *  Read right encoder pin states using digitalReadFromISR
      *  function and increment/decrement the right encoder step
      *  counters based on the pin states read.
      *
@@ -166,7 +166,7 @@ void IRAM_ATTR
 Encoder::onRightB()
 {
     /*
-     *  Read right encoder pin states using digitalReadFromISR.................?
+     *  Read right encoder pin states using digitalReadFromISR
      *  function and increment/decrement the right encoder step
      *  counters based on the pin states read.
      *

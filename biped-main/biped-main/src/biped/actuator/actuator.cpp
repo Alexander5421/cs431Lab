@@ -109,7 +109,7 @@ Actuator::actuate(const ActuationCommand& actuation_command)
      *  instead of digitalWrite.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    double motor_left_pwm_clamped = clamp(actuation_command_.motor_left_pwm, static_cast<double>( MotorParameter::pwm_min), static_cast<double>( MotorParameter::pwm_max));
+    double motor_left_pwm_clamped = clamp(actuation_command_.motor_left_pwm, static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
     double motor_right_pwm_clamped = clamp(actuation_command_.motor_right_pwm, static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
     analogWrite(ESP32Pin::motor_left_pwm,static_cast<int>(motor_left_pwm_clamped));
     analogWrite(ESP32Pin::motor_right_pwm,static_cast<int>(motor_right_pwm_clamped));

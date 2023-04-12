@@ -133,9 +133,6 @@ pushButtonBInterruptHandler();
  */
 bool IRAM_ATTR
 timerInterruptHandler(void* timer);
-
-bool IRAM_ATTR
-timerInterruptHandlerNoPra();
 }   // namespace biped
 
 #endif  // TASK_INTERRUPT_H_

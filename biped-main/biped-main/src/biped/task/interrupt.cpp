@@ -257,9 +257,4 @@ timerInterruptHandler(void* timer)
 
     return true;
 }
-bool IRAM_ATTR
-timerInterruptHandlerPra()
-{
-   timerInterruptHandler(NULL);
-}
 }   // namespace biped

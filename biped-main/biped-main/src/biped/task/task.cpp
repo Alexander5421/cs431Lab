@@ -237,87 +237,87 @@ bestEffortTask()
     /*
      *  Declare camera task woken flag and set to false.
      */
-    // static bool camera_task_woken = false;
+    static bool camera_task_woken = false;
 
-    // /*
-    //  *  Print serial number to display.
-    //  */
-    // Display(0) << "Biped: #" << serial_number_;
+    /*
+     *  Print serial number to display.
+     */
+    Display(0) << "Biped: #" << serial_number_;
 
-    // /*
-    //  *  Print real-time task timings to display.
-    //  */
-    // Display(1) << "Real-time: " << execution_time_real_time_task_ << " "
-    //         << interval_real_time_task_;
+    /*
+     *  Print real-time task timings to display.
+     */
+    Display(1) << "Real-time: " << execution_time_real_time_task_ << " "
+            << interval_real_time_task_;
 
-    // /*
-    //  *  Print controller active status to display.
-    //  */
-    // if (controller_->getActiveStatus())
-    // {
-    //     Display(2) << "Controller: active";
-    // }
-    // else
-    // {
-    //     Display(2) << "Controller: inactive";
-    // }
+    /*
+     *  Print controller active status to display.
+     */
+    if (controller_->getActiveStatus())
+    {
+        Display(2) << "Controller: active";
+    }
+    else
+    {
+        Display(2) << "Controller: inactive";
+    }
 
-    // /*
-    //  *  Execute plan and store the planner stage.
-    //  *  See the planner class for details.
-    //  */
-    // // TODO LAB 8 YOUR CODE HERE.
-    // const int stage = -1;
+    /*
+     *  Execute plan and store the planner stage.
+     *  See the planner class for details.
+     */
+    // TODO LAB 8 YOUR CODE HERE.
+    const int stage = -1;
 
-    // /*
-    //  *  Print planner status to display.
-    //  */
-    // if (stage < 0)
-    // {
-    //     Display(3) << "Planner: inactive";
-    // }
-    // else
-    // {
-    //     Display(3) << "Planner: stage " << stage;
-    // }
+    /*
+     *  Print planner status to display.
+     */
+    if (stage < 0)
+    {
+        Display(3) << "Planner: inactive";
+    }
+    else
+    {
+        Display(3) << "Planner: stage " << stage;
+    }
 
-    // /*
-    //  *  Print Wi-Fi status to display.
-    //  */
-    // if (WiFi.status() == WL_CONNECTED)
-    // {
-    //     Display(4) << "Wi-Fi: " << WiFi.localIP().toString().c_str();
+    /*
+     *  Print Wi-Fi status to display.
+     */
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        Display(4) << "Wi-Fi: " << WiFi.localIP().toString().c_str();
 
-    //     /*
-    //      *  If the Wi-Fi is connected, validate the camera task
-    //      *  handle and wake camera task using the FreeRTOS
-    //      *  xTaskNotifyGive function if the camera task woken flag
-    //      *  is false. Then, set camera task woken flag to true.
-    //      */
-    //     // TODO LAB 9 YOUR CODE HERE.
-    // }
-    // else
-    // {
-    //     Display(4) << "Wi-Fi: disconnected";
-    // }
+        /*
+         *  If the Wi-Fi is connected, validate the camera task
+         *  handle and wake camera task using the FreeRTOS
+         *  xTaskNotifyGive function if the camera task woken flag
+         *  is false. Then, set camera task woken flag to true.
+         */
+        // TODO LAB 9 YOUR CODE HERE.
+    }
+    else
+    {
+        Display(4) << "Wi-Fi: disconnected";
+    }
 
-    // /*
-    //  *  Show the NeoPixel frame.
-    //  *  See the NeoPixel class for details.
-    //  */
-    // // TODO LAB 6 YOUR CODE HERE.
-    // neopixel_->show();
-    
+    /*
+     *  Show the NeoPixel frame.
+     *  See the NeoPixel class for details.
+     */
+    // TODO LAB 6 YOUR CODE HERE.
+    neopixel_->show();
 
-    // /*
-    //  *  Flush the display driver buffer to the display.
-    //  *  See the display class for details.
-    //  */
-    // // TODO LAB 6 YOUR CODE HERE.
-    // Display::display();
+    /*
+     *  Flush the display driver buffer to the display.
+     *  See the display class for details.
+     */
+    // TODO LAB 6 YOUR CODE HERE.
+    Display::display();
+
+    EncoderData encoderData = sensor_->getEncoderData();
     IMUData imudata = sensor_->getIMUDataBMX160();
     TimeOfFlightData tofdata = sensor_->getTimeOfFlightData();
-    EncoderData encoderData = sensor_->getEncoderData();
 
     biped::Serial(LogLevel::info) << "LinearAcc" << imudata.acceleration_x << " " << imudata.acceleration_y << " " << imudata.acceleration_z;
     biped::Serial(LogLevel::info) << "AngV" << imudata.angular_velocity_x << " " << imudata.angular_velocity_y << " " << imudata.angular_velocity_z;
