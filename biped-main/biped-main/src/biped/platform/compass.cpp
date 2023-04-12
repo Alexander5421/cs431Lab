@@ -79,12 +79,12 @@ Compass::initialize(IMUData& imu_data)
 {
     /*
      *  Perform initial attitude calculation.
-     *  Do not call the calculateAttitude function here.yingai
+     *  Do not call the calculateAttitude function here.
      *  See the comments in the calculateAttitude function
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    imu_data.attitude_z =degreesToRadians(atan2(imu_data.compass_y, imu_data.compass_x ));
+    imu_data.attitude_z = atan2(imu_data.compass_y,imu_data.compass_x);
 
     /*
      *  Configure Z attitude Kalman filter.
@@ -270,7 +270,7 @@ Compass::calculateAttitude(IMUData& imu_data)
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    const double attitude_z_raw = atan2(imu_data.compass_y, imu_data.compass_x );
+    const double attitude_z_raw = atan2(imu_data.compass_y,imu_data.compass_x); 
 
     /*
      *  Filter the raw Z attitude data using the Kalman filter.
@@ -285,7 +285,8 @@ Compass::calculateAttitude(IMUData& imu_data)
      *  the corresponding entry in the given IMU data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    imu_data.attitude_z =degreesToRadians(attitude_z_kalman_filter); 
+    imu_data.attitude_z = degreesToRadians(attitude_z_kalman_filter);
+
 }
 
 void
