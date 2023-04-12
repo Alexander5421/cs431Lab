@@ -38,6 +38,7 @@ IMU::getCompassCalibrationBMX160() const
      *  BMX160 compass object and return the struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    return bmx160_compass_.getCalibration();
 }
 
 IMUData
@@ -112,6 +113,7 @@ IMU::readBMX160()
      *  See the compass class for details.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    bmx160_compass_.calibrate(bmx160_data_);
 
     /*
      *  Perform attitude calculations for BMX160 IMU.
@@ -204,6 +206,7 @@ IMU::initializeBMX160()
      *  IMU data struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    bmx160_compass_.initialize(bmx160_data_);
 
     /*
      *  Perform initial attitude calculations.
@@ -393,5 +396,6 @@ IMU::onPushButtonB()
      *  See the compass class for details.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    bmx160_compass_.startCalibration();
 }
 }   // namespace biped
