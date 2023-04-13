@@ -119,6 +119,8 @@ setup()
      *  periods, if applicable.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    controller_->setPeriod(PeriodParameter::fast,true);
+    controller_->setPeriod(PeriodParameter::slow,false);
 
     /*
      *  Create I/O expander interrupt tasks using the
@@ -135,7 +137,7 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_max,
-        task_handle_io_expander_a_interrupt_,
+        &task_handle_io_expander_a_interrupt_,
         TaskParameter::core_1     
     );
 
@@ -145,7 +147,7 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_max,
-        task_handle_io_expander_b_interrupt_,
+        &task_handle_io_expander_b_interrupt_,
         TaskParameter::core_1     
     );
 
@@ -174,6 +176,9 @@ setup()
      *  See the parameter header for details.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    io_expander_a_->pinModePortA(IOExpanderAPortAPin::pushbutton_a,INPUT_PULLUP);
+    io_expander_a_->pinModePortA(IOExpanderAPortAPin::pushbutton_b,INPUT_PULLUP);
+    io_expander_a_->pinModePortB(IOExpanderAPortBPin::pushbutton_c,INPUT_PULLUP);
 
     /*
      *  Attach the push button interrupt handlers using
@@ -181,6 +186,8 @@ setup()
      *  See the interrupt and parameter header for details.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    io_expander_a_->attachInterruptPortA(IOExpanderAPortAPin::pushbutton_a,pushButtonAInterruptHandler,FALLING);
+    io_expander_a_->attachInterruptPortA(IOExpanderAPortAPin::pushbutton_b,pushButtonBInterruptHandler,FALLING);
 
     /*
      *  Create real-time, Wi-Fi, and camera tasks using the
@@ -199,7 +206,7 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_max-1,
-        task_handle_real_time_,
+        &task_handle_real_time_,
         TaskParameter::core_1     
     );
 
@@ -209,7 +216,7 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_min,
-        task_handle_wifi_,
+        &task_handle_wifi_,
         TaskParameter::core_1     
     );
 
@@ -219,7 +226,7 @@ setup()
         TaskParameter::stack_size,
         NULL,
         TaskParameter::priority_min,
-        task_handle_camera_,
+        &task_handle_camera_,
         TaskParameter::core_1     
     );
 

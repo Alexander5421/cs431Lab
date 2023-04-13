@@ -61,7 +61,8 @@ IMU::getDataMPU6050() const
     return mpu6050_data_;
 }
 // do all readBMX160 did except the calibaration and calculation
-void::firstReadBMX160(){
+void
+IMU::firstReadBMX160(){
     sBmx160SensorData_t compass;
     sBmx160SensorData_t angular_velocity;
     sBmx160SensorData_t acceleration;
@@ -77,11 +78,11 @@ void::firstReadBMX160(){
     bmx160_data_.acceleration_x = -acceleration.y;
     bmx160_data_.acceleration_y = -acceleration.x;
     bmx160_data_.acceleration_z = acceleration.z;
-    mpu6050_data_.temperature = temperature.temperature;
     bmx160_data_.temperature = 0;
 }
 
-void::firstReadMPU6050(){
+void
+IMU::firstReadMPU6050(){
     sensors_event_t acceleration;
     sensors_event_t angular_velocity;
     sensors_event_t temperature;
@@ -197,12 +198,13 @@ IMU::readMPU6050()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    mpu6050_data_.acceleration_x = acceleration.x;
-    mpu6050_data_.acceleration_y = acceleration.y;
-    mpu6050_data_.acceleration_z = acceleration.z;
-    mpu6050_data_.angular_velocity_x = angular_velocity.x;
-    mpu6050_data_.angular_velocity_y = angular_velocity.y;
-    mpu6050_data_.angular_velocity_z = angular_velocity.z;
+    mpu6050_data_.acceleration_x = acceleration.acceleration.x;
+    mpu6050_data_.acceleration_y = acceleration.acceleration.y;
+    mpu6050_data_.acceleration_z = acceleration.acceleration.z;
+
+    mpu6050_data_.angular_velocity_x = angular_velocity.gyro.x;
+    mpu6050_data_.angular_velocity_y = angular_velocity.gyro.y;
+    mpu6050_data_.angular_velocity_z = angular_velocity.gyro.z;
     // mpu6050_data_.compass_x = 0;
     // mpu6050_data_.compass_y = 0;
     // mpu6050_data_.compass_z = 0;

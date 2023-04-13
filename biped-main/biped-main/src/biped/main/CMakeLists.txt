@@ -3,7 +3,7 @@ add_executable(
 	biped
 	biped.cpp
 )
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Set library link targets
 target_link_libraries(
 	biped PRIVATE

@@ -30,6 +30,7 @@ OpenLoopController::getReference() const
      *  Return the open loop controller reference (R).
      */
     // TODO LAB 7 YOUR CODE HERE.
+    return reference_;
 }
 
 void
@@ -39,6 +40,7 @@ OpenLoopController::setGain(const double& gain)
      *  Set the open loop controller gain.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    gain_ = gain;
 }
 
 void
@@ -48,6 +50,7 @@ OpenLoopController::setSaturation(const ControllerSaturation& saturation)
      *  Set the open loop controller saturation.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    saturation_ = saturation;
 }
 
 void
@@ -57,6 +60,7 @@ OpenLoopController::setReference(const double& reference)
      *  Set the open loop controller reference (R).
      */
     // TODO LAB 7 YOUR CODE HERE.
+    reference_ = reference;
 }
 
 double
@@ -74,6 +78,7 @@ OpenLoopController::control()
      *  https://en.wikipedia.org/wiki/Open-loop_controller
      */
     // TODO LAB 7 YOUR CODE HERE.
+    double open_loop_controller_output = gain_*clamp(reference_, static_cast<double>(saturation_.input_lower), static_cast<double>(saturation_.input_upper));
 
     /*
      *  Return the clamped output between the output
@@ -81,5 +86,6 @@ OpenLoopController::control()
      *  output of the open loop controller.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    return clamp(open_loop_controller_output, static_cast<double>(saturation_.input_lower), static_cast<double>(saturation_.input_upper));
 }
 }   // namespace biped

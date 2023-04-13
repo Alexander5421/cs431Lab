@@ -282,7 +282,8 @@ Compass::calculateAttitude(IMUData& imu_data)
      *  the corresponding entry in the given IMU data struct.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    imu_data.attitude_z = degreesToRadians(attitude_z_kalman_filter);
+    imu_data.attitude_z = degreesToRadians(attitude_z_kalman_filter) ;
+    
 
 }
 

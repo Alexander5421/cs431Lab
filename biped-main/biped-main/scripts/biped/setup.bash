@@ -296,7 +296,7 @@ function create_project()
 	# Create project
 	echo "[INFO]: Creating \"$project_name\" project..."
 	cd "$project_dir_build/$project_name"
-	cmake -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE="Release" -DCMAKE_ECLIPSE_MAKE_ARGUMENTS="-j$cpu_cores" -DCMAKE_ECLIPSE_VERSION="$eclipse_version" -DCMAKE_TOOLCHAIN_FILE="$project_dir_cmake/$arduino_cmake_toolchain_name/Arduino-toolchain.cmake" -DARDUINO_BOARD_OPTIONS_FILE="$project_dir_cmake/$project_name/BoardOptions.cmake" "$project_dir_src/$project_name"
+	cmake -G "Eclipse CDT4 - Unix Makefiles" -DCMAKE_BUILD_TYPE="Release" -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_ECLIPSE_MAKE_ARGUMENTS="-j$cpu_cores" -DCMAKE_ECLIPSE_VERSION="$eclipse_version" -DCMAKE_TOOLCHAIN_FILE="$project_dir_cmake/$arduino_cmake_toolchain_name/Arduino-toolchain.cmake" -DARDUINO_BOARD_OPTIONS_FILE="$project_dir_cmake/$project_name/BoardOptions.cmake" "$project_dir_src/$project_name"
 	assert_error $? "Failed to create \"$project_name\" project"
 
 	echo "[INFO]: Finished creating \"$project_name\" project."

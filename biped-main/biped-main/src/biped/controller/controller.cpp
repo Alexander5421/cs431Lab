@@ -144,6 +144,10 @@ Controller::Controller() : active_(false), open_loop_attitude_z_control_enabled_
      *  Set the controller gains to their respective controllers.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    open_loop_controller_attitude_z_.setGain(open_loop_controller_gain_attitude_z_);
+    pid_controller_attitude_y_.setGain(pid_controller_gain_attitude_y_);
+    pid_controller_attitude_z_.setGain(pid_controller_gain_attitude_z_);
+    pid_controller_position_x_.setGain(pid_controller_gain_position_x_);
 
     /*
      *  Adjust the input saturation bounds such that your Biped
@@ -184,6 +188,7 @@ Controller::Controller() : active_(false), open_loop_attitude_z_control_enabled_
      *  reference struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    setControllerReference(controller_reference_);
 
     /*
      *  Initialize NeoPixel frame for controller active status.
@@ -211,6 +216,7 @@ Controller::getActuationCommand() const
      *  Return the class member actuation command struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    return actuation_command_;
 }
 
 bool
@@ -220,7 +226,7 @@ Controller::getActiveStatus() const
      *  Return the controller active flag.
      */
     // TODO LAB 7 YOUR CODE HERE.
-    return false;
+    return active_;//........................
 }
 
 ControllerReference
@@ -230,6 +236,7 @@ Controller::getControllerReference() const
      *  Return the class member controller reference struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    return controller_reference_;
 }
 
 void
@@ -241,12 +248,16 @@ Controller::setControllerReference(const ControllerReference& controller_referen
      *  reference struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    controller_reference_ = controller_reference;
 
     /*
      *  Set the entries in the member controller reference
      *  struct to their respective controllers.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    pid_controller_attitude_y_.setReference(controller_reference_.attitude_y);
+    pid_controller_attitude_z_.setReference(controller_reference_.attitude_z);
+    pid_controller_position_x_.setReference(controller_reference_.position_x);
 }
 
 void
@@ -266,6 +277,7 @@ Controller::setPeriod(const double& period, const bool& fast_domain)
          *  Set the Y attitude (pitch) PID controller period.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_attitude_y_.setPeriod(PeriodParameter::fast);
     }
     else
     {
@@ -273,11 +285,13 @@ Controller::setPeriod(const double& period, const bool& fast_domain)
          *  Set the X position (forward/backward) PID controller period.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_position_x_.setPeriod(PeriodParameter::slow);
 
         /*
          *  Set the Z attitude (yaw) PID controller period.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_attitude_z_.setPeriod(PeriodParameter::slow);
     }
 }
 
@@ -289,6 +303,8 @@ Controller::enableOpenLoopAttitudeZControl(const bool& enable)
      *  set the Z attitude open loop control enable flag.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    pid_controller_attitude_z_.resetErrorIntegral();
+    open_loop_attitude_z_control_enabled_ = enable;
 }
 
 void
@@ -299,12 +315,16 @@ Controller::control(const bool& fast_domain)
      *  structs from the sensor object.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    EncoderData encoder_data = sensor_->getEncoderData();
+    IMUData bmx160_imu_data = sensor_->getIMUDataBMX160();
+    IMUData mpu6050_imu_data = sensor_->getIMUDataMPU6050();
 
     /*
      *  Update the controller active status using the MPU6050 IMU
      *  data struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    updateActiveStatus(mpu6050_imu_data);
 
     /*
      *  The reason behind the fast and slow time domain here is
@@ -322,6 +342,7 @@ Controller::control(const bool& fast_domain)
          *  IMU data struct.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_attitude_y_.setState(mpu6050_imu_data.attitude_y);
 
         /*
          *  Set the error derivative input (delta e) of the Y attitude
@@ -329,6 +350,7 @@ Controller::control(const bool& fast_domain)
          *  MPU6050 IMU data struct.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_attitude_y_.setErrorDifferential(mpu6050_imu_data.angular_velocity_y);
 
         /*
          *  Execute the Y attitude (pitch) PID controller and store
@@ -336,6 +358,7 @@ Controller::control(const bool& fast_domain)
          *  controller output variable.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        output_attitude_z_ = pid_controller_attitude_y_.control();
     }
     else
     {
@@ -345,6 +368,7 @@ Controller::control(const bool& fast_domain)
          *  position in the encoder data struct.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_position_x_.setState(encoder_data.position_x);
 
         /*
          *  Set the error derivative input (delta e) of the X position
@@ -352,6 +376,7 @@ Controller::control(const bool& fast_domain)
          *  in the encoder data struct.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_position_x_.setErrorDifferential(encoder_data.velocity_x);
 
         /*
          *  Set the plant state input (Y) of the Z attitude
@@ -359,6 +384,7 @@ Controller::control(const bool& fast_domain)
          *  BMX160 IMU data struct.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_attitude_z_.setState(bmx160_imu_data.attitude_z);
 
         /*
          *  Set the error derivative input (delta e) of the Z attitude (yaw)
@@ -366,6 +392,7 @@ Controller::control(const bool& fast_domain)
          *  data struct.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        pid_controller_attitude_z_.setErrorDifferential(mpu6050_imu_data.angular_velocity_z);
 
         /*
          *  Execute the X position (forward/backward) PID controller
@@ -373,6 +400,7 @@ Controller::control(const bool& fast_domain)
          *  (forward/backward) controller output variable.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        output_position_x_ = pid_controller_position_x_.control();
 
         /*
          *  if the Z attitude open loop control is enabled, execute
@@ -381,6 +409,11 @@ Controller::control(const bool& fast_domain)
          *  into the member Z attitude (yaw) controller output variable.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        if (open_loop_attitude_z_control_enabled_) {
+            output_attitude_z_ = open_loop_controller_attitude_z_.control();
+        } else {
+            output_attitude_z_ = pid_controller_attitude_z_.control();
+        }
     }
 
     /*
@@ -390,24 +423,31 @@ Controller::control(const bool& fast_domain)
      *  the Z attitude controller output.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    double motor_left_pwm = output_position_x_ + output_attitude_y_ - output_attitude_z_;
 
     /*
      *  Produce the right motor output by adding all three
      *  controller outputs.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    double motor_right_pwm = output_position_x_ + output_attitude_y_ + output_attitude_z_;
 
     /*
      *  If the controller is inactive, stop the motors
      *  by setting both the motor outputs to 0.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    if (!active_) {
+        actuation_command_.motor_left_pwm = 0;
+        actuation_command_.motor_right_pwm = 0;
+    }
 
     /*
      *  Set the motor enable in the member actuation
      *  command struct to true, enabling the motors.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    actuation_command_.motor_enable = true;
 
     /*
      *  Set the motor directions in the member actuation
@@ -418,6 +458,8 @@ Controller::control(const bool& fast_domain)
      *  the motor parameter name space.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    actuation_command_.motor_left_forward = (motor_left_pwm >= MotorParameter::pwm_min) ? true : false;
+    actuation_command_.motor_right_forward = (motor_right_pwm >= MotorParameter::pwm_min) ? true : false;
 
     /*
      *  Clamp the magnitude of the motor output values to be
@@ -428,6 +470,8 @@ Controller::control(const bool& fast_domain)
      *  clamp function.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    actuation_command_.motor_left_pwm = clamp(motor_left_pwm, static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
+    actuation_command_.motor_right_pwm = clamp(motor_right_pwm, static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
 }
 
 void

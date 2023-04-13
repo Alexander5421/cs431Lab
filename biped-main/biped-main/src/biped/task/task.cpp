@@ -180,6 +180,7 @@ realTimeTask(void* pvParameters)
          *  See the controller class for details.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        controller_->control(true);
 
         /*
          *  Slow domain tasks.
@@ -198,6 +199,7 @@ realTimeTask(void* pvParameters)
              *  See the controller class for details.
              */
             // TODO LAB 7 YOUR CODE HERE.
+            controller_->control(false);
 
             /*
              *  Reset timing domain timer.
@@ -211,6 +213,7 @@ realTimeTask(void* pvParameters)
          *  See the actuator class for details.
          */
         // TODO LAB 7 YOUR CODE HERE.
+        actuator_->actuate(controller_->getActuationCommand());
 
         /*
          *  Update timing domain timer.
@@ -300,6 +303,7 @@ bestEffortTask()
     {
         Display(4) << "Wi-Fi: disconnected";
     }
+    Display::display();
 
     /*
      *  Show the NeoPixel frame.
@@ -313,28 +317,54 @@ bestEffortTask()
      *  See the display class for details.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    Display::display();
 
-    EncoderData encoderData = sensor_->getEncoderData();
+    // EncoderData encoderData = sensor_->getEncoderData();
+    // IMUData imudata = sensor_->getIMUDataBMX160();
+    // TimeOfFlightData tofdata = sensor_->getTimeOfFlightData();
+
+    // biped::Serial(LogLevel::info) << "LinearAcc" << imudata.acceleration_x << " " << imudata.acceleration_y << " " << imudata.acceleration_z;
+    // biped::Serial(LogLevel::info) << "AngV" << imudata.angular_velocity_x << " " << imudata.angular_velocity_y << " " << imudata.angular_velocity_z;
+    // biped::Serial(LogLevel::info) << "c" << imudata.compass_x << " " << imudata.compass_y << " " << imudata.compass_z;
+    // // print the yaw
+    // biped::Serial(LogLevel::info) << "Yaw: " << imudata.attitude_z;
+    // biped::Serial(LogLevel::info) << "Pitch: " << imudata.attitude_y;
+    // biped::Serial(LogLevel::info) <<"TOF"<<tofdata.range_left << " " << tofdata.range_right << " " << tofdata.range_middle;
+    // biped::Serial(LogLevel::info) <<"Encoder"<<encoderData.position_x << " " << encoderData.velocity_x << " " << encoderData.steps;
+    // //
+    // ActuationCommand command = ActuationCommand();
+    // command.motor_enable= true;
+    // command.motor_left_forward =true;
+    // command.motor_right_forward=true;
+    // command.motor_left_pwm = 100;
+    // command.motor_right_pwm = 100;
+
+    // actuator_->actuate(command);
+
+    // if (Serial.read()==1) {
+    //     controller_->
+    //     ControllerParameter::attitude_y_gain_proportional += 5;
+    //     biped::Serial(LogLevel::info) << "Cur Controller Param Value: " << ControllerParameter::attitude_y_gain_proportional;
+    // } else if (Serial.read() == 2) {
+    //     ControllerParameter::attitude_y_gain_proportional -= 5
+    //     biped::Serial(LogLevel::info) << "Cur Controller Param Value: " << ControllerParameter::attitude_y_gain_proportional;
+    // }
+
     IMUData imudata = sensor_->getIMUDataBMX160();
-    TimeOfFlightData tofdata = sensor_->getTimeOfFlightData();
+    Compass::Calibration calibration_data = sensor_->getCompassCalibrationBMX160();
+    biped::Serial(LogLevel::info) << "Compass Calibration offset x: " << calibration_data.offset_x;
+    biped::Serial(LogLevel::info) << "Compass Calibration offset y: " << calibration_data.offset_y;
+    biped::Serial(LogLevel::info) << "Compass Calibration offset z: " << calibration_data.offset_z;
 
-    biped::Serial(LogLevel::info) << "LinearAcc" << imudata.acceleration_x << " " << imudata.acceleration_y << " " << imudata.acceleration_z;
-    biped::Serial(LogLevel::info) << "AngV" << imudata.angular_velocity_x << " " << imudata.angular_velocity_y << " " << imudata.angular_velocity_z;
-    biped::Serial(LogLevel::info) << "c" << imudata.compass_x << " " << imudata.compass_y << " " << imudata.compass_z;
-    // print the yaw
-    biped::Serial(LogLevel::info) << "Yaw: " << imudata.attitude_z;
-    biped::Serial(LogLevel::info) << "Pitch: " << imudata.attitude_y;
-    biped::Serial(LogLevel::info) <<"TOF"<<tofdata.range_left << " " << tofdata.range_right << " " << tofdata.range_middle;
-    biped::Serial(LogLevel::info) <<"Encoder"<<encoderData.position_x << " " << encoderData.velocity_x << " " << encoderData.steps;
-    //
-    ActuationCommand command = ActuationCommand();
-    command.motor_enable= true;
-    command.motor_left_forward =true;
-    command.motor_right_forward=true;
-    command.motor_left_pwm = 100;
-    command.motor_right_pwm = 100;
+    biped::Serial(LogLevel::info) << "Compass Calibration scaler x: " << calibration_data.scaler_x;
+    biped::Serial(LogLevel::info) << "Compass Calibration scaler y: " << calibration_data.scaler_y;
+    biped::Serial(LogLevel::info) << "Compass Calibration scaler z: " << calibration_data.scaler_z;
 
-    actuator_->actuate(command);
+    biped::Serial(LogLevel::info) << "Compass Calibration sign x: " << calibration_data.sign_x;
+    biped::Serial(LogLevel::info) << "Compass Calibration sign y: " << calibration_data.sign_y;
+    biped::Serial(LogLevel::info) << "Compass Calibration sign z: " << calibration_data.sign_z;
+    // biped::Serial(LogLevel::info) << "compass_x"<<  imudata.compass_x;
+    // biped::Serial(LogLevel::info) << "compass_y"<<  imudata.compass_y;
+    // biped::Serial(LogLevel::info) << "Yaw"<<  imudata.attitude_z;
+
 }
 }   // namespace biped

@@ -89,7 +89,7 @@ constexpr double calibration_sign_x = 1;   //!< X compass calibration sign.
 constexpr double calibration_sign_y = 1;    //!< Y compass calibration sign.
 constexpr double calibration_sign_z = 1;    //!< Z compass calibration sign.
 constexpr double calibration_range = 120;   //!< Compass calibration range.
-constexpr double calibration_time = 0; //!< Compass calibration time, in seconds.
+constexpr double calibration_time = 10; //!< Compass calibration time, in seconds.
 constexpr double calibration_controller_reference = 0; //!< Compass calibration controller reference.
 }   // namespace CompassParameter
 
@@ -106,8 +106,8 @@ namespace ControllerParameter
 // TODO LAB 7 YOUR CODE HERE.
 // TODO LAB 8 YOUR CODE HERE.
 constexpr double attitude_y_active = 20; //!< Maximum Y attitude for controller to remain active, in degrees.
-constexpr double attitude_y_gain_proportional = 0; //!< Y attitude PID controller proportional gain.
-constexpr double attitude_y_gain_differential = 0; //!< Y attitude PID controller differential gain.
+constexpr double attitude_y_gain_proportional = -5000; //!< Y attitude PID controller proportional gain.
+constexpr double attitude_y_gain_differential = -50; //!< Y attitude PID controller differential gain.
 constexpr double attitude_y_gain_integral = 0;  //!< Y attitude PID controller integral gain.
 constexpr double attitude_y_gain_integral_max = 0; //!< Y attitude PID controller maximum integral error.
 constexpr double attitude_z_gain_proportional = 0; //!< Z attitude PID controller proportional gain.

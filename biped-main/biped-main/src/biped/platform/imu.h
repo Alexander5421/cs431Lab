@@ -93,7 +93,7 @@ public:
     readBMX160();
 
     void
-    firstfirstReadBMX160();
+    firstReadBMX160();
 
     void 
     firstReadMPU6050();

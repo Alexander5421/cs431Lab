@@ -240,6 +240,9 @@ pushButtonBInterruptHandler()
      *  See the sensor class for details.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    if (sensor_) {
+        sensor_->onPushButtonB();
+    }
 }
 
 bool IRAM_ATTR
