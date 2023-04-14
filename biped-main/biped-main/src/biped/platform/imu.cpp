@@ -138,11 +138,13 @@ IMU::readBMX160()
     bmx160_data_.compass_x = compass.x;
     bmx160_data_.compass_y = compass.y;
     bmx160_data_.compass_z = compass.z;
-    bmx160_data_.angular_velocity_x = angular_velocity.x;
-    bmx160_data_.angular_velocity_y = angular_velocity.y;
-    bmx160_data_.angular_velocity_z = angular_velocity.z;
-    bmx160_data_.acceleration_x = acceleration.x;
-    bmx160_data_.acceleration_y = acceleration.y;
+
+    bmx160_data_.angular_velocity_x = angular_velocity.y;
+    bmx160_data_.angular_velocity_y = angular_velocity.x;
+    bmx160_data_.angular_velocity_z = -angular_velocity.z;
+
+    bmx160_data_.acceleration_x = -acceleration.y;
+    bmx160_data_.acceleration_y = -acceleration.x;
     bmx160_data_.acceleration_z = acceleration.z;
     // bmx160_data_.temperature = 0;
 
@@ -256,7 +258,7 @@ IMU::initializeBMX160()
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    bmx160_data_.attitude_y = atan2(bmx160_data_.acceleration_x,bmx160_data_.acceleration_z);
+    bmx160_data_.attitude_y = -1*atan2(bmx160_data_.acceleration_x,bmx160_data_.acceleration_z);
 
     /*
      *  Configure Y attitude Kalman filter.
@@ -299,7 +301,7 @@ IMU::initializeMPU6050()
      *  for further instructions.
      */
     // TODO LAB 6 YOUR CODE HERE.
-    mpu6050_data_.attitude_y = atan2(mpu6050_data_.acceleration_x,mpu6050_data_.acceleration_z);
+    mpu6050_data_.attitude_y = -1*atan2(mpu6050_data_.acceleration_x,mpu6050_data_.acceleration_z);
 
     /*
      *  Configure Y attitude Kalman filter.
@@ -411,7 +413,7 @@ IMU::calculateAttitudeMPU6050()
      *  https://en.wikipedia.org/wiki/Right-hand_rule#Rotations
      */
     // TODO LAB 6 YOUR CODE HERE.
-    const double attitude_y_raw = atan2(mpu6050_data_.acceleration_x,mpu6050_data_.acceleration_z);
+    const double attitude_y_raw = -atan2(mpu6050_data_.acceleration_x,mpu6050_data_.acceleration_z);
 
     /*
      *  Filter the raw Y attitude data using the Kalman filter.

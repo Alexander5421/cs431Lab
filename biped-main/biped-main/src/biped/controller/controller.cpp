@@ -16,6 +16,7 @@
 #include "utility/math.h"
 #include "common/parameter.h"
 #include "sensor/sensor.h"
+#include "platform/serial.h"
 
 /*
  *  Biped namespace.
@@ -358,7 +359,7 @@ Controller::control(const bool& fast_domain)
          *  controller output variable.
          */
         // TODO LAB 7 YOUR CODE HERE.
-        output_attitude_z_ = pid_controller_attitude_y_.control();
+        output_attitude_y_ = pid_controller_attitude_y_.control();
     }
     else
     {
@@ -424,6 +425,7 @@ Controller::control(const bool& fast_domain)
      */
     // TODO LAB 7 YOUR CODE HERE.
     double motor_left_pwm = output_position_x_ + output_attitude_y_ - output_attitude_z_;
+    // biped::Serial(LogLevel::info) << "motor_left_pwm " << motor_left_pwm;
 
     /*
      *  Produce the right motor output by adding all three
@@ -432,15 +434,23 @@ Controller::control(const bool& fast_domain)
     // TODO LAB 7 YOUR CODE HERE.
     double motor_right_pwm = output_position_x_ + output_attitude_y_ + output_attitude_z_;
 
+    // biped::Serial(LogLevel::info) << "output_attitude_z_ " << output_attitude_z_;
+    biped::Serial(LogLevel::info) << "output_attitude_y_ " << output_attitude_y_;
+    // biped::Serial(LogLevel::info) << "output_position_x_ " << output_position_x_;
+    IMUData imudata = sensor_->getIMUDataMPU6050();
+    biped::Serial(LogLevel::info) << "pitch" << radiansToDegrees(imudata.attitude_y);
+
+
     /*
      *  If the controller is inactive, stop the motors
      *  by setting both the motor outputs to 0.
      */
     // TODO LAB 7 YOUR CODE HERE.
     if (!active_) {
-        actuation_command_.motor_left_pwm = 0;
-        actuation_command_.motor_right_pwm = 0;
+        motor_left_pwm = 0;
+        motor_right_pwm = 0;
     }
+
 
     /*
      *  Set the motor enable in the member actuation
@@ -458,8 +468,8 @@ Controller::control(const bool& fast_domain)
      *  the motor parameter name space.
      */
     // TODO LAB 7 YOUR CODE HERE.
-    actuation_command_.motor_left_forward = (motor_left_pwm >= MotorParameter::pwm_min) ? true : false;
-    actuation_command_.motor_right_forward = (motor_right_pwm >= MotorParameter::pwm_min) ? true : false;
+    actuation_command_.motor_left_forward = (motor_left_pwm >= (double)MotorParameter::pwm_min) ? true : false;
+    actuation_command_.motor_right_forward = (motor_right_pwm >= (double)MotorParameter::pwm_min) ? true : false;
 
     /*
      *  Clamp the magnitude of the motor output values to be
@@ -470,8 +480,8 @@ Controller::control(const bool& fast_domain)
      *  clamp function.
      */
     // TODO LAB 7 YOUR CODE HERE.
-    actuation_command_.motor_left_pwm = clamp(motor_left_pwm, static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
-    actuation_command_.motor_right_pwm = clamp(motor_right_pwm, static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
+    actuation_command_.motor_left_pwm = clamp(fabs(motor_left_pwm), static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
+    actuation_command_.motor_right_pwm = clamp(fabs(motor_right_pwm), static_cast<double>(MotorParameter::pwm_min), static_cast<double>(MotorParameter::pwm_max));
 }
 
 void
@@ -480,6 +490,7 @@ Controller::updateActiveStatus(const IMUData& imu_data)
     /*
      *  Check Y attitude (pitch)
      */
+    // biped::Serial(LogLevel::info) << "pitch " << fabs(radiansToDegrees(imu_data.attitude_y));;
     if (fabs(radiansToDegrees(imu_data.attitude_y)) > ControllerParameter::attitude_y_active)
     {
         /*

@@ -105,9 +105,9 @@ namespace ControllerParameter
  */
 // TODO LAB 7 YOUR CODE HERE.
 // TODO LAB 8 YOUR CODE HERE.
-constexpr double attitude_y_active = 20; //!< Maximum Y attitude for controller to remain active, in degrees.
+constexpr double attitude_y_active = 30; //!< Maximum Y attitude for controller to remain active, in degrees.
 constexpr double attitude_y_gain_proportional = -5000; //!< Y attitude PID controller proportional gain.
-constexpr double attitude_y_gain_differential = -50; //!< Y attitude PID controller differential gain.
+constexpr double attitude_y_gain_differential = -30; //!< Y attitude PID controller differential gain.
 constexpr double attitude_y_gain_integral = 0;  //!< Y attitude PID controller integral gain.
 constexpr double attitude_y_gain_integral_max = 0; //!< Y attitude PID controller maximum integral error.
 constexpr double attitude_z_gain_proportional = 0; //!< Z attitude PID controller proportional gain.

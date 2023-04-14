@@ -29,7 +29,8 @@
 #include "task/task.h"
 #include "planner/waypoint_planner.h"
 #include "platform/serial.h"
-
+# define compass 0
+# define test 1
 /*
  *  Biped namespace.
  */
@@ -348,8 +349,8 @@ bestEffortTask()
     //     ControllerParameter::attitude_y_gain_proportional -= 5
     //     biped::Serial(LogLevel::info) << "Cur Controller Param Value: " << ControllerParameter::attitude_y_gain_proportional;
     // }
+    #if compass
 
-    IMUData imudata = sensor_->getIMUDataBMX160();
     Compass::Calibration calibration_data = sensor_->getCompassCalibrationBMX160();
     biped::Serial(LogLevel::info) << "Compass Calibration offset x: " << calibration_data.offset_x;
     biped::Serial(LogLevel::info) << "Compass Calibration offset y: " << calibration_data.offset_y;
@@ -362,6 +363,12 @@ bestEffortTask()
     biped::Serial(LogLevel::info) << "Compass Calibration sign x: " << calibration_data.sign_x;
     biped::Serial(LogLevel::info) << "Compass Calibration sign y: " << calibration_data.sign_y;
     biped::Serial(LogLevel::info) << "Compass Calibration sign z: " << calibration_data.sign_z;
+    #endif
+    #if test
+
+    // IMUData imudata = sensor_->getIMUDataBMX160();
+    // biped::Serial(LogLevel::info) << "pitch " << radiansToDegrees(imudata.attitude_y);
+    #endif
     // biped::Serial(LogLevel::info) << "compass_x"<<  imudata.compass_x;
     // biped::Serial(LogLevel::info) << "compass_y"<<  imudata.compass_y;
     // biped::Serial(LogLevel::info) << "Yaw"<<  imudata.attitude_z;
