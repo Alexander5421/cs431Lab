@@ -155,7 +155,7 @@ PIDController::control()
      *  the PID controller.
      */
     // TODO LAB 7 YOUR CODE HERE.
-    biped::Serial(LogLevel::info) << "state_ " << state_;
+    // biped::Serial(LogLevel::info) << "state_ " << state_;
     double e = clamp(state_-reference_, static_cast<double>(saturation_.input_lower), static_cast<double>(saturation_.input_upper));
 
     /*
