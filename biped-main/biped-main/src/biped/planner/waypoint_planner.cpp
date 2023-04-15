@@ -117,6 +117,13 @@ WaypointPlanner::start()
      *  and not completed.
      */
     // TODO LAB 8 YOUR CODE HERE.
+    if(plan_completed_){
+        waypoint_ = waypoint_start_;
+        waypoint_counter_ = 1;
+        waypoint_started_ = false;
+        plan_started_ = false;
+        plan_completed_ = false;
+    }
 }
 
 int
@@ -136,6 +143,9 @@ WaypointPlanner::plan()
      *  is not active (pause the plan during safety disengage.)
      */
     // TODO LAB 8 YOUR CODE HERE.
+    if (plan_completed_ || !controller_.getActiveStatus()){
+        return -1;
+    }
 
     /*
      *  Mark the plan as not started and completed, and return
@@ -143,6 +153,11 @@ WaypointPlanner::plan()
      *  current waypoint is null.
      */
     // TODO LAB 8 YOUR CODE HERE.
+    if(plan_started_ && (!plan_completed_) && (!waypoint_)) {
+        plan_started_ = false;
+        plan_completed_ = true;
+        return -1;
+    }
 
     /*
      *  If the plan has not started.
@@ -175,6 +190,9 @@ WaypointPlanner::plan()
          *  current time, and mark the current waypoint as started.
          */
         // TODO LAB 8 YOUR CODE HERE.
+        controller_.setControllerReference(waypoint_.controller_reference)
+        waypoint_timer_ = millis();
+        waypoint_start_ = true;
     }
     else
     {
@@ -186,6 +204,11 @@ WaypointPlanner::plan()
          *  as not started.
          */
         // TODO LAB 8 YOUR CODE HERE.
+        if((millis()-waypoint_timer_) > waypoint_->duration*1000){
+            waypoint_ = waypoint_->next;
+            waypoint_counter_++;
+            waypoint_start = false;
+        }
     }
 
     /*
