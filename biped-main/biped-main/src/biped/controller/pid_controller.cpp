@@ -185,7 +185,7 @@ PIDController::control()
      *  the PID controller.
      */
     // TODO LAB 7 YOUR CODE HERE.
-    double proportional_output = (gain_.proportional+ offset )*e;
+    double proportional_output = (gain_.proportional)*e;
 
     /*
      *  Calculate the integral output.

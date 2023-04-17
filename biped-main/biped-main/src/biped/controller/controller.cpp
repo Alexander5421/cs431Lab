@@ -435,10 +435,10 @@ Controller::control(const bool& fast_domain)
     double motor_right_pwm = output_position_x_ + output_attitude_y_ + output_attitude_z_;
 
     // biped::Serial(LogLevel::info) << "output_attitude_z_ " << output_attitude_z_;
-    biped::Serial(LogLevel::info) << "output_attitude_y_ " << output_attitude_y_;
+    // biped::Serial(LogLevel::info) << "output_attitude_y_ " << output_attitude_y_;
     // biped::Serial(LogLevel::info) << "output_position_x_ " << output_position_x_;
     IMUData imudata = sensor_->getIMUDataMPU6050();
-    biped::Serial(LogLevel::info) << "pitch" << radiansToDegrees(imudata.attitude_y);
+    // biped::Serial(LogLevel::info) << "pitch" << radiansToDegrees(imudata.attitude_y);
 
 
     /*
