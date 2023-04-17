@@ -114,6 +114,10 @@ public:
     void
     control(const bool& fast_domain);
 
+    void setGain(int controllerIndex, PIDController::Gain& newGain);
+
+    void getGain(int controllerIndex, PIDController::Gain& gain);
+
 private:
 
     /**
