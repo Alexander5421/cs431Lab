@@ -538,8 +538,8 @@ Controller::updateActiveStatus(const IMUData& imu_data)
         }
     }
 }
-    void 
-    Controller::setGain(int controllerIndex, PIDController::Gain newGain){
+void 
+Controller::setGain(int controllerIndex, PIDController::Gain& newGain){
         // based on the index, set the gain of the corresponding controller. y,z,x
         switch (controllerIndex)
         {
@@ -556,8 +556,9 @@ Controller::updateActiveStatus(const IMUData& imu_data)
         }
     }
 
-    PIDController::Gain
-    Controller::getGain(int controllerIndex){
+
+PIDController::Gain
+Controller:: getGain(int controllerIndex){
         // based on the index, get the gain of the corresponding controller. y,z,x
         switch (controllerIndex)
         {
@@ -571,5 +572,6 @@ Controller::updateActiveStatus(const IMUData& imu_data)
             return pid_controller_gain_position_x_;
             break;
         }
+        return pid_controller_gain_attitude_y_;
     }
 }   // namespace biped

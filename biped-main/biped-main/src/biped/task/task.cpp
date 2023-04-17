@@ -372,12 +372,18 @@ bestEffortTask()
     // biped::Serial(LogLevel::info) << "compass_x"<<  imudata.compass_x;
     // biped::Serial(LogLevel::info) << "compass_y"<<  imudata.compass_y;
     // biped::Serial(LogLevel::info) << "Yaw"<<  imudata.attitude_z;
+    // PIDController::Gain gain = controller_->getGain(0);
+    // if(offset!=0){
+    //     gain.proportional+=offset;
+    //     controller_->setGain(0,gain);
+    //     offset = 0;
+    // }
     PIDController::Gain gain = controller_->getGain(0);
-    gain.proportional+=offset;
-    controller_->setGain(0,gain);
+    
     // use biped::Serial to print out the gain
+    biped::Serial(LogLevel::info) << "offset" << offset;
     biped::Serial(LogLevel::info) << "Proportional Gain: " << gain.proportional;
-    biped::Serial(LogLevel::info) << "Derivative Gain: " << gain.derivative;
+    biped::Serial(LogLevel::info) << "Derivative Gain: " << gain.differential;
     biped::Serial(LogLevel::info) << "Integral Gain: " << gain.integral;
 
     

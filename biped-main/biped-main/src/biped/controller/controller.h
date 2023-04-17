@@ -116,7 +116,7 @@ public:
 
     void setGain(int controllerIndex, PIDController::Gain& newGain);
 
-    void getGain(int controllerIndex, PIDController::Gain& gain);
+    PIDController::Gain getGain(int controllerIndex);
 
 private:
 
