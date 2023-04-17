@@ -125,6 +125,9 @@ pushButtonAInterruptHandler();
 void IRAM_ATTR
 pushButtonBInterruptHandler();
 
+void IRAM_ATTR
+pushButtonCInterruptHandler();
+
 /**
  *  @brief  Timer interrupt handler.
  *

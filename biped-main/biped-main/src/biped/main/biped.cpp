@@ -188,6 +188,8 @@ setup()
     // TODO LAB 7 YOUR CODE HERE.
     io_expander_a_->attachInterruptPortA(IOExpanderAPortAPin::pushbutton_a,pushButtonAInterruptHandler,FALLING);
     io_expander_a_->attachInterruptPortA(IOExpanderAPortAPin::pushbutton_b,pushButtonBInterruptHandler,FALLING);
+    io_expander_a_->attachInterruptPortB(IOExpanderAPortBPin::pushbutton_c,pushButtonCInterruptHandler,FALLING);
+
 
     /*
      *  Create real-time, Wi-Fi, and camera tasks using the

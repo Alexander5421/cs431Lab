@@ -372,6 +372,8 @@ bestEffortTask()
     // biped::Serial(LogLevel::info) << "compass_x"<<  imudata.compass_x;
     // biped::Serial(LogLevel::info) << "compass_y"<<  imudata.compass_y;
     // biped::Serial(LogLevel::info) << "Yaw"<<  imudata.attitude_z;
+    biped::Serial(LogLevel::info) << "offset"<<  offset;
+    
 
 }
 }   // namespace biped

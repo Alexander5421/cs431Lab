@@ -70,8 +70,10 @@ extern TaskHandle_t task_handle_wifi_;  //!< Wi-Fi task handle.
 extern unsigned long execution_time_real_time_task_; //!< Real-time task execution time, in microseconds.
 extern unsigned long interval_real_time_task_;  //!< Real-time task interval, in microseconds.
 extern double timer_domain_;    //!< Period domain timer, in seconds.
+extern double offset = 0;
 
 extern unsigned serial_number_; //!< Serial number.
+
 }   // namespace biped
 
 #endif  // COMMON_GLOBAL_H_

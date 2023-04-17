@@ -229,6 +229,8 @@ pushButtonAInterruptHandler()
      *  See the planner class for details.
      */
     // TODO LAB 8 YOUR CODE HERE.
+    offset+=100;
+
 }
 
 void IRAM_ATTR
@@ -244,6 +246,18 @@ pushButtonBInterruptHandler()
         sensor_->onPushButtonB();
     }
 }
+void IRAM_ATTR
+pushButtonCInterruptHandler()
+{
+    /*
+     *  Validate sensor object pointer and call push
+     *  button B callback function.
+     *  See the sensor class for details.
+     */
+    // TODO LAB 7 YOUR CODE HERE.
+    offset-=100;
+}
+
 
 bool IRAM_ATTR
 timerInterruptHandler(void* timer)
