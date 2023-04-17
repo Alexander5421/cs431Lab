@@ -52,6 +52,7 @@ TaskHandle_t task_handle_wifi_ = nullptr;
 unsigned long execution_time_real_time_task_ = 0;
 unsigned long interval_real_time_task_ = 0;
 double timer_domain_ = 0;
+double offset = 0;
 
 /*
  *  Initialize serial number to 0.

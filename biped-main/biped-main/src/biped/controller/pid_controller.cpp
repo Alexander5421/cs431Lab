@@ -14,6 +14,7 @@
 #include "common/parameter.h"
 #include "controller/pid_controller.h"
 #include "platform/serial.h"
+#include "common/global.h"
 
 /*
  *  Biped namespace.
@@ -184,7 +185,7 @@ PIDController::control()
      *  the PID controller.
      */
     // TODO LAB 7 YOUR CODE HERE.
-    double proportional_output = gain_.proportional*e;
+    double proportional_output = (gain_.proportional+ offset )*e;
 
     /*
      *  Calculate the integral output.
