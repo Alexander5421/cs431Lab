@@ -538,4 +538,38 @@ Controller::updateActiveStatus(const IMUData& imu_data)
         }
     }
 }
+    void 
+    Controller::setGain(int controllerIndex, PIDController::Gain newGain){
+        // based on the index, set the gain of the corresponding controller. y,z,x
+        switch (controllerIndex)
+        {
+        case 0:
+            pid_controller_attitude_y_.setGain(newGain);
+            break;
+        case 2:
+            pid_controller_attitude_z_.setGain(newGain);
+            break;
+        case 1:
+            pid_controller_position_x_.setGain(newGain);
+            break;
+     
+        }
+    }
+
+    PIDController::Gain
+    Controller::getGain(int controllerIndex){
+        // based on the index, get the gain of the corresponding controller. y,z,x
+        switch (controllerIndex)
+        {
+        case 0:
+            return pid_controller_gain_attitude_y_;
+            break;
+        case 2:
+            return pid_controller_gain_attitude_z_;
+            break;
+        case 1:
+            return pid_controller_gain_position_x_;
+            break;
+        }
+    }
 }   // namespace biped
