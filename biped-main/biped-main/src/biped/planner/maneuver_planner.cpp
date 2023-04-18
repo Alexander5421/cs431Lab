@@ -97,6 +97,13 @@ ManeuverPlanner::start()
      *  and not completed.
      */
     // TODO LAB 8 YOUR CODE HERE.
+    if(plan_completed_){
+        maneuver_ = maneuver_start_;
+        maneuver_counter_ = 1;
+        maneuver_started_ = false;
+        plan_started_ = false;
+        plan_completed_ = false;
+    }    
 }
 
 int
@@ -125,6 +132,9 @@ ManeuverPlanner::plan()
      *  is not active (pause the plan during safety disengage.)
      */
     // TODO LAB 8 YOUR CODE HERE.
+    if (plan_completed_ || !controller_->getActiveStatus()){
+        return -1;
+    }
 
     /*
      *  Mark the plan as not started and completed, and return
@@ -132,7 +142,11 @@ ManeuverPlanner::plan()
      *  current maneuver is null.
      */
     // TODO LAB 8 YOUR CODE HERE.
-
+     if(plan_started_ && (!plan_completed_) && (!maneuver_)) {
+        plan_started_ = false;
+        plan_completed_ = true;
+        return -1;
+    }
     /*
      *  If the plan has not started.
      */
@@ -165,6 +179,9 @@ ManeuverPlanner::plan()
          *  the current maneuver as started.
          */
         // TODO LAB 8 YOUR CODE HERE.
+        controller_->setControllerReference(generateControllerReference());
+        maneuver_timer_ = millis();
+        maneuver_started_ = true;
     }
     else
     {
@@ -172,6 +189,9 @@ ManeuverPlanner::plan()
          *  Transition to the next maneuver based on the
          *  current maneuver transition type and value.
          */
+
+        
+
         switch (maneuver_->transition_type)
         {
             case Maneuver::TransitionType::attitude_z_above:
@@ -182,7 +202,12 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
-
+                IMUData bmx160_imu_data = sensor_->getIMUDataBMX160();
+                if(bmx160_imu_data.attitude_z > maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::attitude_z_below:
@@ -193,7 +218,12 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
-
+                IMUData bmx160_imu_data = sensor_->getIMUDataBMX160();
+                if(bmx160_imu_data.attitude_z < maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
                 break;
             }
             case Maneuver::TransitionType::duration:
@@ -204,6 +234,11 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                if((millis() - maneuver_timer_) > maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -215,6 +250,11 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                 EncoderData encoder_data = sensor_->getEncoderData();
+                if(encoder_data.position_x > maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
 
                 break;
             }
@@ -226,6 +266,12 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                EncoderData encoder_data = sensor_->getEncoderData();
+                if(encoder_data.position_x < maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -237,6 +283,11 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                if (sesor_->getTimeOfFlightData().range_left > maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -248,6 +299,11 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                if (sesor_->getTimeOfFlightData().range_left < maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -259,6 +315,11 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                if (sesor_->getTimeOfFlightData().range_middle > maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -270,6 +331,11 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                if (sesor_->getTimeOfFlightData().range_middle < maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -281,6 +347,11 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                if (sesor_->getTimeOfFlightData().range_right > maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -292,6 +363,11 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
+                if (sesor_->getTimeOfFlightData().range_right < maneuver_->transition_value){
+                    maneuver_ = maneuver_->next;
+                    maneuver_counter_++;
+                    maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -319,7 +395,9 @@ ManeuverPlanner::generateControllerReference() const
      *  Create a default controller reference.
      */
     ControllerReference controller_reference;
-
+    EncoderData encoder_data = sensor_->getEncoderData();
+    IMUData bmx160_imu_data = sensor_->getIMUDataBMX160();
+    IMUData mpu6050_imu_data = sensor_->getIMUDataMPU6050();
     /*
      *  Validate current maneuver pointer.
      */
@@ -343,7 +421,9 @@ ManeuverPlanner::generateControllerReference() const
              *  current X position and Z attitude.
              */
             // TODO LAB 8 YOUR CODE HERE.
-
+            
+            controller_reference.position_x = encoder_data.position_x;
+            controller_reference.attitude_z = bmx160_imu_data.attitude_z;
             break;
         }
         case Maneuver::Type::reverse:
@@ -355,7 +435,9 @@ ManeuverPlanner::generateControllerReference() const
              *  i.e., stay at the current Z attitude.
              */
             // TODO LAB 8 YOUR CODE HERE.
-
+            controller_reference.position_x = encoder_data.position_x - 1000;
+            controller_reference.attitude_z = bmx160_imu_data.attitude_z;
+            
             break;
         }
         case Maneuver::Type::reverse_left:
@@ -367,6 +449,8 @@ ManeuverPlanner::generateControllerReference() const
              *  current Z attitude, i.e., reverse left 90 degrees.
              */
             // TODO LAB 8 YOUR CODE HERE.
+            controller_reference.position_x = encoder_data.position_x - 1000;
+            controller_reference.attitude_z = bmx160_imu_data.attitude_z + degreesToRadians(90);
 
             break;
         }
@@ -379,6 +463,8 @@ ManeuverPlanner::generateControllerReference() const
              *  current Z attitude, i.e., reverse right 90 degrees.
              */
             // TODO LAB 8 YOUR CODE HERE.
+            controller_reference.position_x = encoder_data.position_x - 1000;
+            controller_reference.attitude_z = bmx160_imu_data.attitude_z - degreesToRadians(90);
 
             break;
         }
@@ -391,6 +477,8 @@ ManeuverPlanner::generateControllerReference() const
              *  i.e., stay at the current Z attitude.
              */
             // TODO LAB 8 YOUR CODE HERE.
+            controller_reference.position_x = encoder_data.position_x + 1000;
+            controller_reference.attitude_z = bmx160_imu_data.attitude_z;
 
             break;
         }
@@ -403,6 +491,8 @@ ManeuverPlanner::generateControllerReference() const
              *  current Z attitude, i.e., drive left 90 degrees.
              */
             // TODO LAB 8 YOUR CODE HERE.
+            controller_reference.position_x = encoder_data.position_x + 1000;
+            controller_reference.attitude_z = bmx160_imu_data.attitude_z - degreesToRadians(90);
 
             break;
         }
@@ -415,6 +505,8 @@ ManeuverPlanner::generateControllerReference() const
              *  current Z attitude, i.e., drive right 90 degrees.
              */
             // TODO LAB 8 YOUR CODE HERE.
+            controller_reference.position_x = encoder_data.position_x + 1000;
+            controller_reference.attitude_z = bmx160_imu_data.attitude_z + degreesToRadians(90);
 
             break;
         }
