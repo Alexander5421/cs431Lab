@@ -153,11 +153,11 @@ WaypointPlanner::plan()
      *  current waypoint is null.
      */
     // TODO LAB 8 YOUR CODE HERE.
-    if(plan_started_ && (!plan_completed_) && (!waypoint_)) {
-        plan_started_ = false;
-        plan_completed_ = true;
-        return -1;
-    }
+    // if(plan_started_ && (!plan_completed_) && (!waypoint_)) {
+    //     plan_started_ = false;
+    //     plan_completed_ = true;
+    //     return -1;
+    // }
 
     /*
      *  If the plan has not started.
@@ -190,9 +190,9 @@ WaypointPlanner::plan()
          *  current time, and mark the current waypoint as started.
          */
         // TODO LAB 8 YOUR CODE HERE.
-        controller_->setControllerReference(waypoint_->controller_reference);
-        waypoint_timer_ = millis();
-        waypoint_started_ = true;
+        // controller_->setControllerReference(waypoint_->controller_reference);
+        // waypoint_timer_ = millis();
+        // waypoint_started_ = true;
     }
     else
     {
@@ -204,11 +204,11 @@ WaypointPlanner::plan()
          *  as not started.
          */
         // TODO LAB 8 YOUR CODE HERE.
-        if((millis()-waypoint_timer_) > waypoint_->duration*1000){
-            waypoint_ = waypoint_->next;
-            waypoint_counter_++;
-            waypoint_started_ = false;
-        }
+        // if((millis()-waypoint_timer_) > waypoint_->duration*1000){
+        //     waypoint_ = waypoint_->next;
+        //     waypoint_counter_++;
+        //     waypoint_started_ = false;
+        // }
     }
 
     /*

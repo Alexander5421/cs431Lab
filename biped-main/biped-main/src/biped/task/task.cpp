@@ -29,7 +29,7 @@
 #include "task/task.h"
 #include "planner/waypoint_planner.h"
 #include "platform/serial.h"
-# define compass 0
+# define compass 1
 # define test 1
 /*
  *  Biped namespace.

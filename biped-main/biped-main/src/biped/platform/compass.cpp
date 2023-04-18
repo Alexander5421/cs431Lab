@@ -21,6 +21,7 @@
 #include "controller/controller.h"
 #include "common/global.h"
 #include "common/parameter.h"
+#include "platform/serial.h"
 
 /*
  *  Biped namespace.
@@ -115,6 +116,7 @@ Compass::calibrate(IMUData& imu_data)
 
     if (calibration_started_)
     {
+        biped::Serial(LogLevel::info) << "calibration started!";
         /*
          *  Update calibration start time point, set Z attitude controller
          *  reference to the calibration controller reference in compass
@@ -135,6 +137,7 @@ Compass::calibrate(IMUData& imu_data)
             }
 
             calibration_ended = false;
+            biped::Serial(LogLevel::info) << "calibration ended!";
         }
 
         /*
@@ -198,6 +201,7 @@ Compass::calibrate(IMUData& imu_data)
                 >= CompassParameter::calibration_time)
         {
             calibration_started_ = false;
+            biped::Serial(LogLevel::info) << "here1";
         }
         else if (millisecondsToSeconds(millis() - calibration_time_point_start_)
                 >= CompassParameter::calibration_time / 2.0)
@@ -208,7 +212,9 @@ Compass::calibrate(IMUData& imu_data)
                 controller_reference.attitude_z = -1
                         * CompassParameter::calibration_controller_reference;
                 controller_->setControllerReference(controller_reference);
+                biped::Serial(LogLevel::info) << "here3";
             }
+            biped::Serial(LogLevel::info) << "here2";
         }
     }
     else

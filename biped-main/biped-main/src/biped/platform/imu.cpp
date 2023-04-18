@@ -441,5 +441,6 @@ IMU::onPushButtonB()
      */
     // TODO LAB 7 YOUR CODE HERE.
     bmx160_compass_.startCalibration();
+    Serial(LogLevel::info) << "In here";
 }
 }   // namespace biped

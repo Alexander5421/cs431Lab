@@ -189,7 +189,7 @@ Controller::Controller() : active_(false), open_loop_attitude_z_control_enabled_
      *  reference struct.
      */
     // TODO LAB 7 YOUR CODE HERE.
-    setControllerReference(controller_reference_);
+    setControllerReference(controller_reference_);//..........................................................
 
     /*
      *  Initialize NeoPixel frame for controller active status.
@@ -259,6 +259,7 @@ Controller::setControllerReference(const ControllerReference& controller_referen
     pid_controller_attitude_y_.setReference(controller_reference_.attitude_y);
     pid_controller_attitude_z_.setReference(controller_reference_.attitude_z);
     pid_controller_position_x_.setReference(controller_reference_.position_x);
+    open_loop_controller_attitude_z_.setReference(CompassParameter::calibration_controller_reference);//...............
 }
 
 void
@@ -412,8 +413,16 @@ Controller::control(const bool& fast_domain)
         // TODO LAB 7 YOUR CODE HERE.
         if (open_loop_attitude_z_control_enabled_) {
             output_attitude_z_ = open_loop_controller_attitude_z_.control();
+            biped::Serial(LogLevel::info) << "open_loop_controller_attitude_z_.control()" << output_attitude_z_;
+
+            double motor_left_pwm = output_position_x_ + output_attitude_y_ - output_attitude_z_;
+            biped::Serial(LogLevel::info) << "motor_left_pwm " << motor_left_pwm;
+
+            double motor_right_pwm = output_position_x_ + output_attitude_y_ + output_attitude_z_;
+            biped::Serial(LogLevel::info) << "motor_right_pwm " << motor_right_pwm;
         } else {
             output_attitude_z_ = pid_controller_attitude_z_.control();
+            biped::Serial(LogLevel::info) << "pid_controller_attitude_z_.control()";
         }
     }
 
@@ -425,7 +434,7 @@ Controller::control(const bool& fast_domain)
      */
     // TODO LAB 7 YOUR CODE HERE.
     double motor_left_pwm = output_position_x_ + output_attitude_y_ - output_attitude_z_;
-    // biped::Serial(LogLevel::info) << "motor_left_pwm " << motor_left_pwm;
+    biped::Serial(LogLevel::info) << "motor_left_pwm " << motor_left_pwm;
 
     /*
      *  Produce the right motor output by adding all three
@@ -433,6 +442,7 @@ Controller::control(const bool& fast_domain)
      */
     // TODO LAB 7 YOUR CODE HERE.
     double motor_right_pwm = output_position_x_ + output_attitude_y_ + output_attitude_z_;
+    biped::Serial(LogLevel::info) << "motor_right_pwm " << motor_right_pwm;
 
     // biped::Serial(LogLevel::info) << "output_attitude_z_ " << output_attitude_z_;
     // biped::Serial(LogLevel::info) << "output_attitude_y_ " << output_attitude_y_;
