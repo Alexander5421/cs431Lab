@@ -105,20 +105,20 @@ namespace ControllerParameter
  */
 // TODO LAB 7 YOUR CODE HERE.
 // TODO LAB 8 YOUR CODE HERE.
-constexpr double attitude_y_active = 20; //!< Maximum Y attitude for controller to remain active, in degrees.
-constexpr double attitude_y_gain_proportional = -2500; //!< Y attitude PID controller proportional gain.
+constexpr double attitude_y_active = 15; //!< Maximum Y attitude for controller to remain active, in degrees.
+constexpr double attitude_y_gain_proportional = -3400; //!< Y attitude PID controller proportional gain.
 constexpr double attitude_y_gain_differential = 0;//-25; //!< Y attitude PID controller differential gain.
 constexpr double attitude_y_gain_integral = 0;  //!< Y attitude PID controller integral gain.
 constexpr double attitude_y_gain_integral_max = 0; //!< Y attitude PID controller maximum integral error.
 constexpr double attitude_z_gain_proportional = 0; //!< Z attitude PID controller proportional gain.
 constexpr double attitude_z_gain_differential = 0; //!< Z attitude PID controller differential gain.
-constexpr double attitude_z_gain_integral = 0;  //!< Z attitude PID controller integral gain.
-constexpr double attitude_z_gain_integral_max = 0; //!< Z attitude PID controller maximum integral error.
-constexpr double attitude_z_gain_open_loop = 1;    //!< Z attitude open-loop controller gain.
-constexpr double position_x_gain_proportional = 0;//175; //!< X position PID controller proportional gain.
-constexpr double position_x_gain_differential = 0;//200; //!< X position PID controller differential gain.
+constexpr double attitude_z_gain_integral = 0;//-1;  //!< Z attitude PID controller integral gain.
+constexpr double attitude_z_gain_integral_max = 0;//10; //!< Z attitude PID controller maximum integral error.
+constexpr double attitude_z_gain_open_loop = 0;//1;    //!< Z attitude open-loop controller gain.
+constexpr double position_x_gain_proportional = 800;//175; //!< X position PID controller proportional gain.
+constexpr double position_x_gain_differential = 900;//1800;//200; //!< X position PID controller differential gain.
 constexpr double position_x_gain_integral = 0;//5;  //!< X position PID controller integral gain.
-constexpr double position_x_gain_integral_max = 100; //!< X position PID controller maximum integral error.
+constexpr double position_x_gain_integral_max = 0;//100; //!< X position PID controller maximum integral error.
 constexpr double position_x_saturation_input_lower = std::numeric_limits<double>::lowest(); //!< X position controller input saturation upper bound.
 constexpr double position_x_saturation_input_upper = std::numeric_limits<double>::max(); //!< X position controller input saturation lower bound.
 }   // namespace ControllerParameter

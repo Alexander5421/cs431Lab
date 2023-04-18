@@ -125,7 +125,7 @@ Encoder::onLeftA()
      *  Incremental rotary encoder references:
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/..........................
      */
-    // TODO LAB 6 YOUR CODE HERE.
+    // TODO LAB 6 YOUR CODE HERE...................................
     digitalReadFromISR(ESP32Pin::motor_left_encoder_a) != digitalReadFromISR(ESP32Pin::motor_left_encoder_b) ?
             steps_left_ ++ : steps_left_ --;
 }
