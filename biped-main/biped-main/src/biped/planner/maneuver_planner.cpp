@@ -255,6 +255,7 @@ ManeuverPlanner::plan()
                     maneuver_ = maneuver_->next;
                     maneuver_counter_++;
                     maneuver_started_ = false;
+                }
 
                 break;
             }
@@ -283,7 +284,7 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
-                if (sesor_->getTimeOfFlightData().range_left > maneuver_->transition_value){
+                if (sensor_->getTimeOfFlightData().range_left > maneuver_->transition_value){
                     maneuver_ = maneuver_->next;
                     maneuver_counter_++;
                     maneuver_started_ = false;
@@ -299,7 +300,7 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
-                if (sesor_->getTimeOfFlightData().range_left < maneuver_->transition_value){
+                if (sensor_->getTimeOfFlightData().range_left < maneuver_->transition_value){
                     maneuver_ = maneuver_->next;
                     maneuver_counter_++;
                     maneuver_started_ = false;
@@ -315,7 +316,7 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
-                if (sesor_->getTimeOfFlightData().range_middle > maneuver_->transition_value){
+                if (sensor_->getTimeOfFlightData().range_middle > maneuver_->transition_value){
                     maneuver_ = maneuver_->next;
                     maneuver_counter_++;
                     maneuver_started_ = false;
@@ -331,7 +332,7 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
-                if (sesor_->getTimeOfFlightData().range_middle < maneuver_->transition_value){
+                if (sensor_->getTimeOfFlightData().range_middle < maneuver_->transition_value){
                     maneuver_ = maneuver_->next;
                     maneuver_counter_++;
                     maneuver_started_ = false;
@@ -347,7 +348,7 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
-                if (sesor_->getTimeOfFlightData().range_right > maneuver_->transition_value){
+                if (sensor_->getTimeOfFlightData().range_right > maneuver_->transition_value){
                     maneuver_ = maneuver_->next;
                     maneuver_counter_++;
                     maneuver_started_ = false;
@@ -363,7 +364,7 @@ ManeuverPlanner::plan()
                  *  the maneuver counter, and mark the current maneuver as not started.
                  */
                 // TODO LAB 8 YOUR CODE HERE.
-                if (sesor_->getTimeOfFlightData().range_right < maneuver_->transition_value){
+                if (sensor_->getTimeOfFlightData().range_right < maneuver_->transition_value){
                     maneuver_ = maneuver_->next;
                     maneuver_counter_++;
                     maneuver_started_ = false;
