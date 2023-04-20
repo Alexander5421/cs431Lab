@@ -72,7 +72,7 @@ Encoder::read()
     // TODO LAB 6 YOUR CODE HERE.
     double averaged_step_count = (double)(steps_left_ + steps_right_)/2.0;
 
-    data_.position_x = averaged_step_count/(double)EncoderParameter::steps_per_meter;
+    data_.position_x = averaged_step_count*2/(double)EncoderParameter::steps_per_meter;//..........................
     data_.steps = (double)averaged_step_count;
 }
 
@@ -126,8 +126,18 @@ Encoder::onLeftA()
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/..........................
      */
     // TODO LAB 6 YOUR CODE HERE...................................
-    digitalReadFromISR(ESP32Pin::motor_left_encoder_a) != digitalReadFromISR(ESP32Pin::motor_left_encoder_b) ?
-            steps_left_ ++ : steps_left_ --;
+    // digitalReadFromISR(ESP32Pin::motor_left_encoder_a) != digitalReadFromISR(ESP32Pin::motor_left_encoder_b) ?
+    //         steps_left_ ++ : steps_left_ --;
+
+    currentStateCLK_left = digitalReadFromISR(ESP32Pin::motor_left_encoder_a);
+    if(currentStateCLK_left != lastStateCLK_left){
+        if(digitalReadFromISR(ESP32Pin::motor_left_encoder_b)!=currentStateCLK_left){
+            steps_left_++;
+        }else{
+            steps_left_ --;
+        }
+    }
+    lastStateCLK_left = currentStateCLK_left;
 }
 
 void IRAM_ATTR
@@ -142,8 +152,17 @@ Encoder::onLeftB()
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/
      */
     // TODO LAB 6 YOUR CODE HERE.
-    digitalReadFromISR(ESP32Pin::motor_left_encoder_b) == digitalReadFromISR(ESP32Pin::motor_left_encoder_a) ?
-            steps_left_ ++ : steps_left_ --;
+    // digitalReadFromISR(ESP32Pin::motor_left_encoder_b) == digitalReadFromISR(ESP32Pin::motor_left_encoder_a) ?
+    //         steps_left_ ++ : steps_left_ --;
+     currentStateCLK_left = digitalReadFromISR(ESP32Pin::motor_left_encoder_b);
+    if(currentStateCLK_left!= lastStateCLK_left){
+        if(digitalReadFromISR(ESP32Pin::motor_left_encoder_a)!=currentStateCLK_left){
+            steps_left_ --;
+        }else{
+            steps_left_ ++;
+        }
+    }
+    lastStateCLK_left = currentStateCLK_left;
 }
 
 void IRAM_ATTR
@@ -158,8 +177,17 @@ Encoder::onRightA()
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/
      */
     // TODO LAB 6 YOUR CODE HERE.
-    digitalReadFromISR(ESP32Pin::motor_right_encoder_a) == digitalReadFromISR(ESP32Pin::motor_right_encoder_b) ?
-            steps_right_ ++ : steps_right_ --;
+    // digitalReadFromISR(ESP32Pin::motor_right_encoder_a) == digitalReadFromISR(ESP32Pin::motor_right_encoder_b) ?
+    //         steps_right_ ++ : steps_right_ --;
+    currentStateCLK = digitalReadFromISR(ESP32Pin::motor_right_encoder_a);
+    if(currentStateCLK!= lastStateCLK){
+        if(digitalReadFromISR(ESP32Pin::motor_right_encoder_b)!=currentStateCLK){
+            steps_right_ --;
+        }else{
+             steps_right_ ++;
+        }
+    }
+    lastStateCLK= currentStateCLK;
 }
 
 void IRAM_ATTR
@@ -174,7 +202,16 @@ Encoder::onRightB()
      *  https://lastminuteengineers.com/rotary-encoder-arduino-tutorial/
      */
     // TODO LAB 6 YOUR CODE HERE.
-    digitalReadFromISR(ESP32Pin::motor_right_encoder_b) != digitalReadFromISR(ESP32Pin::motor_right_encoder_a) ?
-            steps_right_ ++ : steps_right_ --;
+    // digitalReadFromISR(ESP32Pin::motor_right_encoder_b) != digitalReadFromISR(ESP32Pin::motor_right_encoder_a) ?
+    //         steps_right_ ++ : steps_right_ --;
+    currentStateCLK = digitalReadFromISR(ESP32Pin::motor_right_encoder_b);
+    if(currentStateCLK!= lastStateCLK){
+        if(digitalReadFromISR(ESP32Pin::motor_right_encoder_a)!=currentStateCLK){
+            steps_right_ ++;
+        }else{
+             steps_right_ --;
+        }
+    }
+    lastStateCLK= currentStateCLK;
 }
 }   // namespace biped

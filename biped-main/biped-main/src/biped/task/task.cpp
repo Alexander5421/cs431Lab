@@ -30,11 +30,11 @@
 #include "planner/waypoint_planner.h"
 #include "platform/serial.h"
 # define compass 1
-# define test 1
+# define test 0
 /*
  *  Biped namespace.
  */
-namespace biped
+namespace biped 
 {
 void
 ioExpanderAInterruptTask(void* pvParameters)
@@ -251,8 +251,8 @@ bestEffortTask()
     /*
      *  Print real-time task timings to display.
      */
-    Display(1) << "Real-time: " << execution_time_real_time_task_ << " "
-            << interval_real_time_task_;
+    // Display(1) << "Real-time: " << execution_time_real_time_task_ << " "
+            // << interval_real_time_task_;
 
     /*
      *  Print controller active status to display.
@@ -271,7 +271,8 @@ bestEffortTask()
      *  See the planner class for details.
      */
     // TODO LAB 8 YOUR CODE HERE.
-    const int stage = -1;
+    // const int stage = -1;
+    int stage = planner_->plan();
 
     /*
      *  Print planner status to display.
@@ -290,7 +291,7 @@ bestEffortTask()
      */
     if (WiFi.status() == WL_CONNECTED)
     {
-        Display(4) << "Wi-Fi: " << WiFi.localIP().toString().c_str();
+        // Display(4) << "Wi-Fi: " << WiFi.localIP().toString().c_str();
 
         /*
          *  If the Wi-Fi is connected, validate the camera task
@@ -302,9 +303,21 @@ bestEffortTask()
     }
     else
     {
-        Display(4) << "Wi-Fi: disconnected";
+        // Display(4) << "Wi-Fi: disconnected";
     }
+    IMUData imudata = sensor_->getIMUDataBMX160();
+    Compass::Calibration calibration_data = sensor_->getCompassCalibrationBMX160();
+    // Display(0)<< "compass_x: " << imudata.compass_x;
+    // Display(1)<< "compass_y: " << imudata.compass_y;
+    // Display(2)<< "compass_z: " << imudata.compass_z;
+
+    // Display(3)<< "scaler x: " << calibration_data.scaler_x;
+    // Display(4)<< "scaler y: " << calibration_data.scaler_y;
+    // Display(5)<< "scaler z: " << calibration_data.scaler_z;
+
+    // Display(6)<< "sign x:" << calibration_data.sign_x<< " sign y:" << calibration_data.sign_y<< " sign z:" << calibration_data.sign_z;
     Display::display();
+    
 
     /*
      *  Show the NeoPixel frame.
@@ -320,14 +333,13 @@ bestEffortTask()
     // TODO LAB 6 YOUR CODE HERE.
 
     // EncoderData encoderData = sensor_->getEncoderData();
-    // IMUData imudata = sensor_->getIMUDataBMX160();
     // TimeOfFlightData tofdata = sensor_->getTimeOfFlightData();
 
     // biped::Serial(LogLevel::info) << "LinearAcc" << imudata.acceleration_x << " " << imudata.acceleration_y << " " << imudata.acceleration_z;
     // biped::Serial(LogLevel::info) << "AngV" << imudata.angular_velocity_x << " " << imudata.angular_velocity_y << " " << imudata.angular_velocity_z;
     // biped::Serial(LogLevel::info) << "c" << imudata.compass_x << " " << imudata.compass_y << " " << imudata.compass_z;
     // // print the yaw
-    // biped::Serial(LogLevel::info) << "Yaw: " << imudata.attitude_z;
+    biped::Serial(LogLevel::info) << "Yaw: " << imudata.attitude_z;
     // biped::Serial(LogLevel::info) << "Pitch: " << imudata.attitude_y;
     // biped::Serial(LogLevel::info) <<"TOF"<<tofdata.range_left << " " << tofdata.range_right << " " << tofdata.range_middle;
     // biped::Serial(LogLevel::info) <<"Encoder"<<encoderData.position_x << " " << encoderData.velocity_x << " " << encoderData.steps;
@@ -351,7 +363,6 @@ bestEffortTask()
     // }
     #if compass
 
-    Compass::Calibration calibration_data = sensor_->getCompassCalibrationBMX160();
     biped::Serial(LogLevel::info) << "Compass Calibration offset x: " << calibration_data.offset_x;
     biped::Serial(LogLevel::info) << "Compass Calibration offset y: " << calibration_data.offset_y;
     biped::Serial(LogLevel::info) << "Compass Calibration offset z: " << calibration_data.offset_z;
@@ -363,11 +374,15 @@ bestEffortTask()
     biped::Serial(LogLevel::info) << "Compass Calibration sign x: " << calibration_data.sign_x;
     biped::Serial(LogLevel::info) << "Compass Calibration sign y: " << calibration_data.sign_y;
     biped::Serial(LogLevel::info) << "Compass Calibration sign z: " << calibration_data.sign_z;
+
     #endif
     #if test
 
     // IMUData imudata = sensor_->getIMUDataBMX160();
-    // biped::Serial(LogLevel::info) << "pitch " << radiansToDegrees(imudata.attitude_y);
+    EncoderData encoderData = sensor_->getEncoderData();
+    biped::Serial(LogLevel::info) <<"Encoder"<<encoderData.position_x << " " << encoderData.velocity_x << " " << encoderData.steps;
+
+
     #endif
     // biped::Serial(LogLevel::info) << "compass_x"<<  imudata.compass_x;
     // biped::Serial(LogLevel::info) << "compass_y"<<  imudata.compass_y;
@@ -378,13 +393,13 @@ bestEffortTask()
     //     controller_->setGain(0,gain);
     //     offset = 0;
     // }
-    PIDController::Gain gain = controller_->getGain(0);
+    // PIDController::Gain gain = controller_->getGain(0);
     
-    // use biped::Serial to print out the gain
-    biped::Serial(LogLevel::info) << "offset" << offset;
-    biped::Serial(LogLevel::info) << "Proportional Gain: " << gain.proportional;
-    biped::Serial(LogLevel::info) << "Derivative Gain: " << gain.differential;
-    biped::Serial(LogLevel::info) << "Integral Gain: " << gain.integral;
+    // // use biped::Serial to print out the gain
+    // biped::Serial(LogLevel::info) << "offset" << offset;
+    // biped::Serial(LogLevel::info) << "Proportional Gain: " << gain.proportional;
+    // biped::Serial(LogLevel::info) << "Derivative Gain: " << gain.differential;
+    // biped::Serial(LogLevel::info) << "Integral Gain: " << gain.integral;
 
     
 

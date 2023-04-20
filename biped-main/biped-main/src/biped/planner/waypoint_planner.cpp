@@ -204,11 +204,11 @@ WaypointPlanner::plan()
          *  as not started.
          */
         // TODO LAB 8 YOUR CODE HERE.
-        // if((millis()-waypoint_timer_) > waypoint_->duration*1000){
-        //     waypoint_ = waypoint_->next;
-        //     waypoint_counter_++;
-        //     waypoint_started_ = false;
-        // }
+        if((millis()-waypoint_timer_) > waypoint_->duration*1000){
+            waypoint_ = waypoint_->next;
+            waypoint_counter_++;
+            waypoint_started_ = false;
+        }
     }
 
     /*

@@ -114,6 +114,8 @@ private:
     LowPassFilter<double> low_pass_filter_velocity_x_;  //!< X velocity low-pass filter object.
     long steps_left_;   //!< Left encoder step counter.
     long steps_right_;  //!< Right encoder step counter.
+    int currentStateCLK_left,currentStateCLK;
+    int lastStateCLK,lastStateCLK_left;
 };
 }   // namespace biped
 

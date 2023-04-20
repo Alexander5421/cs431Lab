@@ -500,7 +500,7 @@ ManeuverPlanner::generateControllerReference() const
         case Maneuver::Type::drive_right:
         {
             /*
-             *  Set the X position controller reference to be way below the
+             *  Set the X position controller reference to be way below............? the
              *  current X position, i.e., reverse until the next maneuver, and
              *  the Z attitude controller reference to be 90 degrees above the
              *  current Z attitude, i.e., drive right 90 degrees.

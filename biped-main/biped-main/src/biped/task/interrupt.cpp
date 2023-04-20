@@ -229,7 +229,9 @@ pushButtonAInterruptHandler()
      *  See the planner class for details.
      */
     // TODO LAB 8 YOUR CODE HERE.
-    // offset+=100;
+    if (planner_) {
+        planner_->start();
+    }
 
 }
 

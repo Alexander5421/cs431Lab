@@ -103,6 +103,7 @@ Compass::startCalibration()
      *  Set calibration start flag to true if not.
      */
     // TODO LAB 7 YOUR CODE HERE.
+    static  bool half = false;
     calibration_started_ = true;
 }
 
@@ -116,7 +117,6 @@ Compass::calibrate(IMUData& imu_data)
 
     if (calibration_started_)
     {
-        biped::Serial(LogLevel::info) << "calibration started!";
         /*
          *  Update calibration start time point, set Z attitude controller
          *  reference to the calibration controller reference in compass
@@ -197,24 +197,26 @@ Compass::calibrate(IMUData& imu_data)
          *  calibration controller reference in compass parameter name
          *  space.
          */
+        biped::Serial(LogLevel::info) << (millisecondsToSeconds(millis() - calibration_time_point_start_));
         if (millisecondsToSeconds(millis() - calibration_time_point_start_)
                 >= CompassParameter::calibration_time)
         {
             calibration_started_ = false;
             biped::Serial(LogLevel::info) << "here1";
         }
-        else if (millisecondsToSeconds(millis() - calibration_time_point_start_)
-                >= CompassParameter::calibration_time / 2.0)
+        else if ((millisecondsToSeconds(millis() - calibration_time_point_start_)
+                >= (CompassParameter::calibration_time / 2.0))&&(true))
         {
+            biped::Serial(LogLevel::info) << "here2";    
             if (controller_)
             {
+                // half = true;
+                biped::Serial(LogLevel::info) << "here3";
                 ControllerReference controller_reference = controller_->getControllerReference();
                 controller_reference.attitude_z = -1
                         * CompassParameter::calibration_controller_reference;
                 controller_->setControllerReference(controller_reference);
-                biped::Serial(LogLevel::info) << "here3";
             }
-            biped::Serial(LogLevel::info) << "here2";
         }
     }
     else

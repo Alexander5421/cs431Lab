@@ -79,18 +79,18 @@ namespace CompassParameter
  */
 // TODO LAB 7 YOUR CODE HERE.
 constexpr double attitude_z_offset = 0;   //!< Z attitude offset, in degrees.
-constexpr double calibration_offset_x = 0;  //!< X compass calibration offset.
-constexpr double calibration_offset_y = 0; //!< Y compass calibration offset.
-constexpr double calibration_offset_z = 0;    //!< Z compass calibration offset.
-constexpr double calibration_scaler_x = 1;   //!< X compass calibration scaler.
-constexpr double calibration_scaler_y = 1;   //!< Y compass calibration scaler.
-constexpr double calibration_scaler_z = 1;   //!< Z compass calibration scaler.
+constexpr double calibration_offset_x = 4.19048;  //!< X compass calibration offset.
+constexpr double calibration_offset_y = -36.4157; //!< Y compass calibration offset.
+constexpr double calibration_offset_z = -15.0993;    //!< Z compass calibration offset.
+constexpr double calibration_scaler_x = 0.195658;   //!< X compass calibration scaler.
+constexpr double calibration_scaler_y = 0.215744;   //!< Y compass calibration scaler.
+constexpr double calibration_scaler_z = 0.443462;   //!< Z compass calibration scaler.
 constexpr double calibration_sign_x = 1;   //!< X compass calibration sign.
 constexpr double calibration_sign_y = 1;    //!< Y compass calibration sign.
 constexpr double calibration_sign_z = 1;    //!< Z compass calibration sign.
 constexpr double calibration_range = 120;   //!< Compass calibration range.
 constexpr double calibration_time = 10; //!< Compass calibration time, in seconds.
-constexpr double calibration_controller_reference = 30; //!< Compass calibration controller reference. ................
+constexpr double calibration_controller_reference = 60; //!< Compass calibration controller reference. ................
 }   // namespace CompassParameter
 
 /*
@@ -105,22 +105,27 @@ namespace ControllerParameter
  */
 // TODO LAB 7 YOUR CODE HERE.
 // TODO LAB 8 YOUR CODE HERE.
-constexpr double attitude_y_active = 15; //!< Maximum Y attitude for controller to remain active, in degrees.
-constexpr double attitude_y_gain_proportional = -3400; //!< Y attitude PID controller proportional gain.
-constexpr double attitude_y_gain_differential = 0;//-25; //!< Y attitude PID controller differential gain.
+constexpr double attitude_y_active = 20; //!< Maximum Y attitude for controller to remain active, in degrees.
+constexpr double attitude_y_gain_proportional = -3400;//-3500//-3400; //!< Y attitude PID controller proportional gain.
+constexpr double attitude_y_gain_differential = -20;//-45;//0;//-25; //!< Y attitude PID controller differential gain.
 constexpr double attitude_y_gain_integral = 0;  //!< Y attitude PID controller integral gain.
 constexpr double attitude_y_gain_integral_max = 0; //!< Y attitude PID controller maximum integral error.
-constexpr double attitude_z_gain_proportional = 0; //!< Z attitude PID controller proportional gain.
+constexpr double attitude_z_gain_proportional = 40; //!< Z attitude PID controller proportional gain.
 constexpr double attitude_z_gain_differential = 0; //!< Z attitude PID controller differential gain.
 constexpr double attitude_z_gain_integral = 0;//-1;  //!< Z attitude PID controller integral gain.
 constexpr double attitude_z_gain_integral_max = 0;//10; //!< Z attitude PID controller maximum integral error.
-constexpr double attitude_z_gain_open_loop = 0;//1;    //!< Z attitude open-loop controller gain.
-constexpr double position_x_gain_proportional = 800;//175; //!< X position PID controller proportional gain.
-constexpr double position_x_gain_differential = 900;//1800;//200; //!< X position PID controller differential gain.
+constexpr double attitude_z_gain_open_loop = 1;    //!< Z attitude open-loop controller gain.
+constexpr double position_x_gain_proportional = 1000;//800;//175; //!< X position PID controller proportional gain.
+constexpr double position_x_gain_differential = 1300;//900;//1800;//200; //!< X position PID controller differential gain.
 constexpr double position_x_gain_integral = 0;//5;  //!< X position PID controller integral gain.
 constexpr double position_x_gain_integral_max = 0;//100; //!< X position PID controller maximum integral error.
-constexpr double position_x_saturation_input_lower = std::numeric_limits<double>::lowest(); //!< X position controller input saturation upper bound.
-constexpr double position_x_saturation_input_upper = std::numeric_limits<double>::max(); //!< X position controller input saturation lower bound.
+//...........................................................
+constexpr double position_x_saturation_input_lower = -0.1;//std::numeric_limits<double>::lowest(); //!< X position controller input saturation upper bound.
+constexpr double position_x_saturation_input_upper = 0.1;//std::numeric_limits<double>::max(); //!< X position controller input saturation lower bound.
+constexpr double attitude_y_saturation_input_lower = std::numeric_limits<double>::lowest(); //!< Y attitude controller input saturation upper bound.
+constexpr double attitude_y_saturation_input_upper = std::numeric_limits<double>::max(); //!< Y attitude controller input saturation lower bound.
+constexpr double attitude_z_saturation_input_lower = -0.15;//std::numeric_limits<double>::lowest(); //!< Z attitude controller input saturation upper bound.
+constexpr double attitude_z_saturation_input_upper = 0.15;//std::numeric_limits<double>::max(); //!< Z attitude controller input saturation lower bound.
 }   // namespace ControllerParameter
 
 /*
