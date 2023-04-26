@@ -60,7 +60,7 @@ WaypointPlanner::WaypointPlanner() : waypoint_counter_(1), waypoint_timer_(0), p
      */
     waypoint_2->controller_reference.attitude_z = degreesToRadians(0);
     waypoint_2->controller_reference.position_x = 1;
-    waypoint_2->duration = 10;
+    waypoint_2->duration = 8;
     waypoint_2->next = waypoint_3;
 
     /*
@@ -68,9 +68,9 @@ WaypointPlanner::WaypointPlanner() : waypoint_counter_(1), waypoint_timer_(0), p
      *      - Go to 2 meter X position (1 meter forward) while turning right 90 degrees for 10 seconds.
      *      - Then, start waypoint 4.
      */
-    waypoint_3->controller_reference.attitude_z = degreesToRadians(-90);
-    waypoint_3->controller_reference.position_x = 2;
-    waypoint_3->duration = 10;
+    waypoint_3->controller_reference.attitude_z = degreesToRadians(90);
+    waypoint_3->controller_reference.position_x = 1;
+    waypoint_3->duration = 4;
     waypoint_3->next = waypoint_4;
 
     /*
@@ -78,9 +78,9 @@ WaypointPlanner::WaypointPlanner() : waypoint_counter_(1), waypoint_timer_(0), p
      *      - Go to 1 meter X position (1 meter backward) while turning right 90 degrees for 10 seconds.
      *      - Then, start waypoint 5.
      */
-    waypoint_4->controller_reference.attitude_z = degreesToRadians(0);
+    waypoint_4->controller_reference.attitude_z = degreesToRadians(180);
     waypoint_4->controller_reference.position_x = 1;
-    waypoint_4->duration = 10;
+    waypoint_4->duration = 4;
     waypoint_4->next = waypoint_5;
 
     /*
@@ -88,9 +88,9 @@ WaypointPlanner::WaypointPlanner() : waypoint_counter_(1), waypoint_timer_(0), p
      *      - Go to 0 meter X position (1 meter backward) without turning for 10 seconds.
      *      - Then, plan completed.
      */
-    waypoint_5->controller_reference.attitude_z = degreesToRadians(0);
-    waypoint_5->controller_reference.position_x = 0;
-    waypoint_5->duration = 10;
+    waypoint_5->controller_reference.attitude_z = degreesToRadians(180);
+    waypoint_5->controller_reference.position_x = 2;
+    waypoint_5->duration = 5;
     waypoint_5->next = nullptr;
 
     /*

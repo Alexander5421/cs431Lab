@@ -25,50 +25,50 @@ namespace biped
 ManeuverPlanner::ManeuverPlanner() : maneuver_counter_(1), maneuver_timer_(0), plan_started_(false),
         maneuver_started_(false), plan_completed_(true)
 {
-    /*
-     *  Create a set of maneuvers for the example plan.
-     *  During their configurations, the maneuvers should
-     *  be chained up in a linked list fashion.
-     */
-    std::shared_ptr<Maneuver> maneuver_1 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> maneuver_2 = std::make_shared<Maneuver>();
-    std::shared_ptr<Maneuver> maneuver_3 = std::make_shared<Maneuver>();
+    // /*
+    //  *  Create a set of maneuvers for the example plan.
+    //  *  During their configurations, the maneuvers should
+    //  *  be chained up in a linked list fashion.
+    //  */
+    // std::shared_ptr<Maneuver> maneuver_1 = std::make_shared<Maneuver>();
+    // std::shared_ptr<Maneuver> maneuver_2 = std::make_shared<Maneuver>();
+    // std::shared_ptr<Maneuver> maneuver_3 = std::make_shared<Maneuver>();
 
-    /*
-     *  Set the start and current maneuvers.
-     */
-    maneuver_start_ = maneuver_1;
-    maneuver_ = maneuver_start_;
+    // /*
+    //  *  Set the start and current maneuvers.
+    //  */
+    // maneuver_start_ = maneuver_1;
+    // maneuver_ = maneuver_start_;
 
-    /*
-     *  Example plan maneuver 1 configuration:
-     *      - Park for 2 seconds.
-     *      - Then, start maneuver 2.
-     */
-    maneuver_1->transition_type = Maneuver::TransitionType::duration;
-    maneuver_1->transition_value = 2;
-    maneuver_1->type = Maneuver::Type::park;
-    maneuver_1->next = maneuver_2;
+    // /*
+    //  *  Example plan maneuver 1 configuration:
+    //  *      - Park for 2 seconds.
+    //  *      - Then, start maneuver 2.
+    //  */
+    // maneuver_1->transition_type = Maneuver::TransitionType::duration;
+    // maneuver_1->transition_value = 2;
+    // maneuver_1->type = Maneuver::Type::park;
+    // maneuver_1->next = maneuver_2;
 
-    /*
-     *  Example plan maneuver 2 configuration:
-     *      - Drive forward until the X position goes above 1 meter.
-     *      - Then, start maneuver 3.
-     */
-    maneuver_2->transition_type = Maneuver::TransitionType::position_x_above;
-    maneuver_2->transition_value = 1;
-    maneuver_2->type = Maneuver::Type::drive;
-    maneuver_2->next = maneuver_3;
+    // /*
+    //  *  Example plan maneuver 2 configuration:
+    //  *      - Drive forward until the X position goes above 1 meter.
+    //  *      - Then, start maneuver 3.
+    //  */
+    // maneuver_2->transition_type = Maneuver::TransitionType::position_x_above;
+    // maneuver_2->transition_value = 1;
+    // maneuver_2->type = Maneuver::Type::drive;
+    // maneuver_2->next = maneuver_3;
 
-    /*
-     *  Example plan maneuver 3 configuration:
-     *      - Park for 2 seconds.
-     *      - Then, plan completed.
-     */
-    maneuver_3->transition_type = Maneuver::TransitionType::duration;
-    maneuver_3->transition_value = 2;
-    maneuver_3->type = Maneuver::Type::park;
-    maneuver_3->next = nullptr;
+    // /*
+    //  *  Example plan maneuver 3 configuration:
+    //  *      - Park for 2 seconds.
+    //  *      - Then, plan completed.
+    //  */
+    // maneuver_3->transition_type = Maneuver::TransitionType::duration;
+    // maneuver_3->transition_value = 2;
+    // maneuver_3->type = Maneuver::Type::park;
+    // maneuver_3->next = nullptr;
 
     /*
      *  Using the example plan above, create your own maneuver-based plan.
@@ -85,6 +85,87 @@ ManeuverPlanner::ManeuverPlanner() : maneuver_counter_(1), maneuver_timer_(0), p
      *  try and avoid the Z attitude singularity in your maneuvers.
      */
     // TODO LAB 9 YOUR CODE HERE.
+
+    std::shared_ptr<Maneuver> maneuver_1 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_2 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_3 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_4 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_5 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_6 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_7 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_8 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_9 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_10 = std::make_shared<Maneuver>();
+    std::shared_ptr<Maneuver> maneuver_11 = std::make_shared<Maneuver>();
+
+    maneuver_start_ = maneuver_1;
+    maneuver_ = maneuver_start_;
+
+    //Park for 1 seconds
+    maneuver_1->transition_type = Maneuver::TransitionType::duration;
+    maneuver_1->transition_value = 1;
+    maneuver_1->type = Maneuver::Type::park;
+    maneuver_1->next = maneuver_2;
+
+    //Drive forward until the X position goes above 1 meter
+    maneuver_2->transition_type = Maneuver::TransitionType::position_x_above;
+    maneuver_2->transition_value = 1;
+    maneuver_2->type = Maneuver::Type::drive;
+    maneuver_2->next = maneuver_3;
+
+    //Park for 1 seconds
+    maneuver_3->transition_type = Maneuver::TransitionType::duration;
+    maneuver_3->transition_value = 1;
+    maneuver_3->type = Maneuver::Type::park;
+    maneuver_3->next = maneuver_4;
+
+    //Drive backward until the X position goes below 0.5 meter
+    maneuver_4->transition_type = Maneuver::TransitionType::position_x_below;
+    maneuver_4->transition_value = 0.5;
+    maneuver_4->type = Maneuver::Type::reverse;
+    maneuver_4->next = maneuver_5;
+
+    //Park for 1 seconds
+    maneuver_5->transition_type = Maneuver::TransitionType::duration;
+    maneuver_5->transition_value = 1;
+    maneuver_5->type = Maneuver::Type::park;
+    maneuver_5->next = maneuver_6;
+
+    //Drive forward while turning right 45 degrees
+    maneuver_6->transition_type = Maneuver::TransitionType::attitude_z_above;
+    maneuver_6->transition_value = degreesToRadians(45);
+    maneuver_6->type = Maneuver::Type::drive_right;
+    maneuver_6->next = maneuver_7;
+
+    //Park for 1 seconds
+    maneuver_7->transition_type = Maneuver::TransitionType::duration;
+    maneuver_7->transition_value = 1;
+    maneuver_7->type = Maneuver::Type::park;
+    maneuver_7->next = maneuver_8;
+
+    //Drive forward while turning left 45 degrees
+    maneuver_8->transition_type = Maneuver::TransitionType::attitude_z_below;
+    maneuver_8->transition_value = 0;
+    maneuver_8->type = Maneuver::Type::drive_left;
+    maneuver_8->next = maneuver_9;
+
+    //Park for 1 seconds
+    maneuver_9->transition_type = Maneuver::TransitionType::duration;
+    maneuver_9->transition_value = 1;
+    maneuver_9->type = Maneuver::Type::park;
+    maneuver_9->next = maneuver_10;
+
+    //Drive backward while turning left 45 degrees
+    maneuver_10->transition_type = Maneuver::TransitionType::attitude_z_above;
+    maneuver_10->transition_value = degreesToRadians(45);
+    maneuver_10->type = Maneuver::Type::reverse_left;
+    maneuver_10->next = maneuver_11;
+
+    //Drive backward while turning right 45 degrees
+    maneuver_11->transition_type = Maneuver::TransitionType::attitude_z_below;
+    maneuver_11->transition_value = 0;
+    maneuver_11->type = Maneuver::Type::reverse_right;
+    maneuver_11->next = nullptr;
 }
 
 void IRAM_ATTR

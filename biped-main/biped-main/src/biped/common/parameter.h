@@ -116,7 +116,7 @@ constexpr double attitude_z_gain_integral = 0;//-1;  //!< Z attitude PID control
 constexpr double attitude_z_gain_integral_max = 0;//10; //!< Z attitude PID controller maximum integral error.
 constexpr double attitude_z_gain_open_loop = 1;    //!< Z attitude open-loop controller gain.
 constexpr double position_x_gain_proportional = 1000;//800;//175; //!< X position PID controller proportional gain.
-constexpr double position_x_gain_differential = 1300;//900;//1800;//200; //!< X position PID controller differential gain.
+constexpr double position_x_gain_differential = 1400;//900;//1800;//200; //!< X position PID controller differential gain.
 constexpr double position_x_gain_integral = 0;//5;  //!< X position PID controller integral gain.
 constexpr double position_x_gain_integral_max = 0;//100; //!< X position PID controller maximum integral error.
 //...........................................................
@@ -124,8 +124,8 @@ constexpr double position_x_saturation_input_lower = -0.1;//std::numeric_limits<
 constexpr double position_x_saturation_input_upper = 0.1;//std::numeric_limits<double>::max(); //!< X position controller input saturation lower bound.
 constexpr double attitude_y_saturation_input_lower = std::numeric_limits<double>::lowest(); //!< Y attitude controller input saturation upper bound.
 constexpr double attitude_y_saturation_input_upper = std::numeric_limits<double>::max(); //!< Y attitude controller input saturation lower bound.
-constexpr double attitude_z_saturation_input_lower = -0.15;//std::numeric_limits<double>::lowest(); //!< Z attitude controller input saturation upper bound.
-constexpr double attitude_z_saturation_input_upper = 0.15;//std::numeric_limits<double>::max(); //!< Z attitude controller input saturation lower bound.
+constexpr double attitude_z_saturation_input_lower = -0.4;//std::numeric_limits<double>::lowest(); //!< Z attitude controller input saturation upper bound.
+constexpr double attitude_z_saturation_input_upper = 0.4;//std::numeric_limits<double>::max(); //!< Z attitude controller input saturation lower bound.
 }   // namespace ControllerParameter
 
 /*

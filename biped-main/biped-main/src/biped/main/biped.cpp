@@ -99,7 +99,7 @@ setup()
     actuator_ = std::make_shared<Actuator>();
     controller_ = std::make_shared<Controller>();
     neopixel_ = std::make_shared<NeoPixel>();
-    planner_ = std::make_shared<ManeuverPlanner>();
+    planner_ = std::make_shared<WaypointPlanner>();  
     sensor_ = std::make_shared<Sensor>();
     timer_ = std::make_shared<ESP32TimerInterrupt>(1);    // Timer Group 1 (Due to Arduino, you should not use timer group 0.)
 
